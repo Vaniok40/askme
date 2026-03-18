@@ -1,13 +1,26 @@
-<div class="user-header text-center">
-  <h1 class="title-medium">
-    Eticheta #<%= @tag.name %>
-  </h1>
+<div class="feed-interests-title" style="padding: 20px 0 10px">
+  <i class="fa fa-tag"></i> #<%= @tag.name %>
 </div>
 
-<div class="user-questions buffer-both">
-  <div class="questions-list">
-    <% @questions.each do |question| %>
-    <%= render partial: 'questions/question', object: question %>
+<% posts = @tag.posts.includes(:user, :tags, :likes, :comments).order(created_at: :desc) %>
+
+<% if posts.empty? %>
+  <div class="feed-empty">
+    <i class="fa fa-newspaper-o"></i>
+    <p>Nicio postare cu eticheta #<%= @tag.name %> încă.</p>
+  </div>
+<% else %>
+  <div class="feed-posts" id="feedPosts">
+    <% posts.each do |post| %>
+      <%= render 'posts/post_card', post: post %>
     <% end %>
   </div>
+<% end %>
+
+<div class="side-panel" id="sidePanel">
+  <button class="side-panel-close" id="sidePanelClose" title="Închide"><i class="fa fa-times"></i></button>
+  <div class="side-panel-content" id="sidePanelContent">
+    <div class="side-panel-loading"><i class="fa fa-spinner fa-spin"></i></div>
+  </div>
 </div>
+<div class="side-panel-overlay" id="sidePanelOverlay"></div>

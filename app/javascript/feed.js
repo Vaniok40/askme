@@ -102,12 +102,10 @@ document.addEventListener('DOMContentLoaded', function () {
           window.showToast('Trebuie să fii autentificat pentru a da like.', 'alert');
           return;
         }
-        var isLiked = likeBtn.classList.contains('liked');
-        var method  = isLiked ? 'DELETE' : 'POST';
-        var csrf    = document.querySelector('meta[name="csrf-token"]');
+        var csrf = document.querySelector('meta[name="csrf-token"]');
 
         fetch('/posts/' + post.id + '/toggle_like', {
-          method: method,
+          method: 'POST',
           headers: {
             'Accept': 'application/json',
             'X-CSRF-Token': csrf ? csrf.content : ''

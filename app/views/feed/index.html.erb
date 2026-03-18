@@ -15,7 +15,7 @@
       <% @active_tag_ids.each do |tid| %>
         <% tag = @all_tags.find { |t| t.id == tid } %>
         <% next unless tag %>
-        <span class="feed-active-tag" data-id="<%= tag.id %>">#<%= tag.name %> <button class="feed-active-tag-remove">×</button></span>
+        <span class="feed-active-tag" data-id="<%= tag.id %>"><span class="feed-active-tag-name">#<%= tag.name %></span><button class="feed-active-tag-remove">×</button></span>
       <% end %>
     </div>
 
