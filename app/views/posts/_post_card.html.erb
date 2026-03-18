@@ -17,6 +17,16 @@
 
   <h3 class="post-card-title"><%= post.title %></h3>
   <p class="post-card-body"><%= truncate(post.body, length: 180) %></p>
+  <% if post.images.attached? %>
+    <div class="post-card-images">
+      <% post.images.first(3).each do |img| %>
+        <%= image_tag img, class: 'post-card-image' %>
+      <% end %>
+      <% if post.images.count > 3 %>
+        <div class="post-card-images-more">+<%= post.images.count - 3 %></div>
+      <% end %>
+    </div>
+  <% end %>
 
   <% if post.tags.any? %>
     <div class="post-card-tags">
@@ -30,5 +40,15 @@
     <span><i class="fa fa-eye"></i> <%= post.views_count %></span>
     <span><i class="fa fa-heart-o"></i> <%= post.likes.size %></span>
     <span><i class="fa fa-comment-o"></i> <%= post.comments.size %></span>
+    <% if current_user %>
+      <button class="post-forward-btn" onclick="openForwardModal(<%= post.id %>); event.stopPropagation();" title="Trimite în chat">
+        <i class="fa fa-share"></i>
+      </button>
+    <% end %>
+    <% if admin_user? && current_user != post.user %>
+      <%= button_to post_path(post), method: :delete, class: 'post-admin-delete-btn', title: 'Șterge postarea', onclick: 'event.stopPropagation(); return confirm("Ștergi această postare?")' do %>
+        <i class="fa fa-trash"></i>
+      <% end %>
+    <% end %>
   </div>
 </div>

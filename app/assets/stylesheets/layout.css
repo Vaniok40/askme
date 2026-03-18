@@ -65,6 +65,11 @@ a {
   padding: 0;
 }
 
+.content:has(.fcard-page) .container {
+  max-width: 100%;
+}
+
+
 .content-wrapper {
   background: white;
   padding: 20px;

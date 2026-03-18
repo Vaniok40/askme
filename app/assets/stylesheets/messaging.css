@@ -232,10 +232,10 @@
 /* ── Fereastra chat dreapta ──────────────────────────────── */
 .chat-window {
   position: fixed;
-  top: 57px;
+  top: 0;
   left: 308px;
   width: 360px;
-  height: calc(100vh - 57px);
+  height: 100vh;
   background: #fff;
   box-shadow: 4px 0 24px rgba(64, 46, 42, 0.12);
   z-index: 1100;
@@ -420,6 +420,224 @@
 }
 
 /* ── Responsive: pe ecrane mici panelul ocupă tot ────────── */
+.chat-img-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f5eeec;
+  color: #7a5a54;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.chat-img-btn:hover {
+  background: #e8dbd8;
+  color: #402E2A;
+}
+
+.chat-img-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 2px;
+  background: #fff;
+  flex-shrink: 0;
+  border-top: 1px solid #f0e8e5;
+}
+
+.chat-img-preview img {
+  height: 60px;
+  width: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e0d4d0;
+}
+
+.chat-img-preview-remove {
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -24px;
+  margin-top: -44px;
+  align-self: flex-start;
+}
+
+/* ── Mesaj imagine în chat ───────────────────────────────── */
+.chat-bubble-image {
+  max-width: 200px;
+  border-radius: 12px;
+  display: block;
+  cursor: pointer;
+}
+
+.chat-msg-mine .chat-bubble-image {
+  border-bottom-right-radius: 4px;
+}
+
+.chat-msg-theirs .chat-bubble-image {
+  border-bottom-left-radius: 4px;
+}
+
+/* ── Card postare forwarded ──────────────────────────────── */
+.chat-post-card {
+  border: 1px solid #e0d4d0;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 240px;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+  text-decoration: none;
+  display: block;
+}
+
+.chat-msg-mine .chat-post-card {
+  border-bottom-right-radius: 4px;
+}
+
+.chat-msg-theirs .chat-post-card {
+  border-bottom-left-radius: 4px;
+}
+
+.chat-post-card:hover {
+  box-shadow: 0 2px 10px rgba(64,46,42,0.15);
+}
+
+.chat-post-card-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #a08070;
+  padding: 7px 12px 4px;
+  border-bottom: 1px solid #f0e8e5;
+}
+
+.chat-post-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+  padding: 6px 12px 2px;
+  line-height: 1.4;
+}
+
+.chat-post-card-body {
+  font-size: 12px;
+  color: #777;
+  padding: 0 12px 8px;
+  line-height: 1.4;
+}
+
+.chat-post-card-user {
+  font-size: 11px;
+  color: #aaa;
+  padding: 0 12px 8px;
+}
+
+/* ── Buton forward ───────────────────────────────────────── */
+.post-forward-btn {
+  background: none;
+  border: none;
+  color: #a08070;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.post-forward-btn:hover {
+  color: #402E2A;
+  background: #f5eeec;
+}
+
+/* ── Modal forward postare ───────────────────────────────── */
+.forward-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.forward-modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 340px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  overflow: hidden;
+}
+
+.forward-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #402E2A;
+  border-bottom: 1px solid #f0e8e5;
+  flex-shrink: 0;
+}
+
+.forward-modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  padding: 12px;
+  gap: 10px;
+}
+
+.forward-convo-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.forward-convo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.forward-convo-item:hover {
+  background: #faf6f5;
+}
+
+.forward-convo-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.forward-convo-username {
+  font-size: 12px;
+  color: #aaa;
+}
+
 @media (max-width: 700px) {
   .msg-panel {
     width: 100vw;

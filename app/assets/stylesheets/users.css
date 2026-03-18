@@ -3,7 +3,11 @@
   padding: 48px 60px 36px;
   color: #fff;
   position: relative;
-  margin: -20px -40px 0;
+  width: 100vw;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  margin-top: -20px;
 }
 
 .profile-hero-inner {
@@ -134,18 +138,23 @@
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #fff;
-  border: 2px solid rgba(255,255,255,0.6);
-  background: transparent;
+  color: #fff !important;
+  border: 2px solid rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.7);
   cursor: pointer;
   text-decoration: none;
   transition: background 0.15s, border-color 0.15s;
 }
 
 .btn-light-outline:hover {
-  background: rgba(255,255,255,0.15);
-  border-color: #fff;
-  color: #fff;
+  background: rgba(0,0,0,0.9);
+  border-color: rgba(0,0,0,0.9);
+  color: #fff !important;
+}
+
+a.btn-light-outline,
+a.btn-light-outline:hover {
+  color: #fff !important;
 }
 
 /* ── Profile body ────────────────────────────────────────── */
@@ -153,9 +162,10 @@
   display: flex;
   gap: 28px;
   align-items: flex-start;
-  padding-top: 28px;
-  max-width: 1000px;
+  padding: 28px 40px 40px;
+  max-width: 1080px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .profile-sidebar {

@@ -61,6 +61,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var userUrl = '/users/' + post.user.id;
     content.innerHTML =
+      '<a href="/posts/' + post.id + '" target="_blank" class="panel-open-page-btn">' +
+        '<i class="fa fa-external-link"></i> Deschide în pagină nouă' +
+      '</a>' +
       '<div class="panel-author">' +
         '<a href="' + userUrl + '" class="panel-avatar" style="background:' + escHtml(post.user.color) + '">' +
           escHtml(post.user.name[0].toUpperCase()) +
@@ -80,9 +83,20 @@ document.addEventListener('DOMContentLoaded', function () {
         '</button>' +
         '<span><i class="fa fa-comment-o"></i> ' + post.comments.length + '</span>' +
         '<span class="panel-date">' + escHtml(post.created_at) + '</span>' +
+        (window.CURRENT_USER_ID
+          ? '<button class="post-forward-btn" onclick="openForwardModal(' + post.id + ')" title="Trimite în chat"><i class="fa fa-share"></i></button>'
+          : '') +
       '</div>' +
 
       '<div class="panel-body">' + escHtml(post.body) + '</div>' +
+
+      (post.images && post.images.length ? '<div class="panel-images">' +
+        post.images.map(function (url) {
+          return '<a href="' + url + '" target="_blank" class="panel-image-link">' +
+            '<img src="' + url + '" class="panel-image" alt="">' +
+          '</a>';
+        }).join('') +
+      '</div>' : '') +
 
       (tags ? '<div class="panel-tags">' + tags + '</div>' : '') +
 

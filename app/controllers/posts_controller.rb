@@ -7,6 +7,7 @@ class PostsController < ApplicationController
     @comments = @post.comments.includes(:user).order(created_at: :asc)
 
     respond_to do |format|
+      format.html
       format.json do
         render json: {
           id: @post.id,
@@ -23,6 +24,7 @@ class PostsController < ApplicationController
             color: helpers.avatar_color(@post.user)
           },
           tags: @post.tags.map(&:name),
+          images: @post.images.map { |img| rails_blob_url(img) },
           comments: @comments.map do |c|
             {
               id: c.id,
@@ -61,6 +63,7 @@ class PostsController < ApplicationController
 
   def update
     authorize_post!
+    @post.images.where(id: params[:post][:remove_image_ids]).each(&:purge) if params[:post][:remove_image_ids].present?
     if @post.update(post_params)
       redirect_to feed_path, notice: 'Postare actualizată!'
     else
@@ -93,7 +96,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :body, tag_ids: [])
+    params.require(:post).permit(:title, :body, tag_ids: [], images: [])
   end
 
   def authorize_post!

@@ -15,13 +15,25 @@ document.addEventListener('DOMContentLoaded', function () {
   var chatInput   = document.getElementById('chatInput');
   var chatSendBtn = document.getElementById('chatSendBtn');
 
+  var chatImageInput = document.getElementById('chatImageInput');
+  var chatImgPreview = document.getElementById('chatImgPreview');
+  var chatImgThumb   = document.getElementById('chatImgThumb');
+  var chatImgRemove  = document.getElementById('chatImgRemove');
+
+  var forwardOverlay   = document.getElementById('forwardOverlay');
+  var forwardModalClose = document.getElementById('forwardModalClose');
+  var forwardSearch    = document.getElementById('forwardSearch');
+  var forwardConvoList = document.getElementById('forwardConvoList');
+
   if (!toggle) return; // utilizator nelogat
 
-  var csrf        = window.CSRF_TOKEN || '';
+  var csrf            = window.CSRF_TOKEN || '';
   var activeConvoId   = null;
   var lastMsgId       = 0;
   var pollTimer       = null;
   var allConvos       = [];
+  var pendingImage    = null; // File object
+  var forwardPostId   = null;
 
   // ── Helpers ──────────────────────────────────────────────
   function esc(str) {
@@ -138,10 +150,8 @@ document.addEventListener('DOMContentLoaded', function () {
           el.dataset.username,
           el.dataset.color
         );
-        // marchează activ
         msgList.querySelectorAll('.msg-convo-item').forEach(function (x) { x.classList.remove('active'); });
         el.classList.add('active');
-        // resetează badge unread pe item
         var dot = el.querySelector('.msg-unread-dot');
         if (dot) dot.remove();
       });
@@ -164,11 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
     lastMsgId = 0;
     clearInterval(pollTimer);
 
-    // header
-    var convoUserUrl = '/users/' + convoId;
-    // găsim id-ul real al utilizatorului din lista conversațiilor
     var convoObj = allConvos.find(function(c) { return c.id === convoId; });
-    if (convoObj) convoUserUrl = '/users/' + convoObj.other_user.id;
+    var convoUserUrl = convoObj ? '/users/' + convoObj.other_user.id : '#';
 
     chatHeader.innerHTML =
       '<a href="' + convoUserUrl + '" class="chat-avatar" style="background:' + esc(color) + '">' + esc(name[0].toUpperCase()) + '</a>' +
@@ -181,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function () {
     chatWindow.classList.add('open');
     overlay.classList.add('visible');
 
-    // dacă panelul e deschis pe mobil îl închidem
     if (window.innerWidth < 700) closePanel();
 
     fetchMessages();
@@ -210,10 +216,35 @@ document.addEventListener('DOMContentLoaded', function () {
           appendMessages(msgs);
           lastMsgId = msgs[msgs.length - 1].id;
           refreshBadge();
-          // reîncarcă lista conversații pentru a actualiza last_message
           loadConversations();
         }
       }).catch(function () {});
+  }
+
+  // ── Renderează mesaj individual ───────────────────────────
+  function buildMessageEl(m) {
+    var el = document.createElement('div');
+    el.className = 'chat-msg ' + (m.mine ? 'chat-msg-mine' : 'chat-msg-theirs');
+
+    var content = '';
+
+    if (m.kind === 'image' && m.image_url) {
+      content = '<img src="' + esc(m.image_url) + '" class="chat-bubble-image" ' +
+        'onclick="window.open(\'' + esc(m.image_url) + '\',\'_blank\')" alt="imagine">';
+      if (m.body) content += '<div class="chat-bubble">' + esc(m.body) + '</div>';
+    } else if (m.kind === 'post_share' && m.post) {
+      content = '<a href="/posts/' + m.post.id + '" class="chat-post-card" target="_blank">' +
+        '<div class="chat-post-card-header"><i class="fa fa-share"></i> Postare partajată</div>' +
+        '<div class="chat-post-card-title">' + esc(m.post.title) + '</div>' +
+        '<div class="chat-post-card-body">' + esc(m.post.body) + (m.post.body.length >= 200 ? '…' : '') + '</div>' +
+        '<div class="chat-post-card-user">de ' + esc(m.post.name) + ' @' + esc(m.post.username) + '</div>' +
+        '</a>';
+    } else {
+      content = '<div class="chat-bubble">' + esc(m.body) + '</div>';
+    }
+
+    el.innerHTML = content + '<div class="chat-msg-time">' + esc(m.created_at) + '</div>';
+    return el;
   }
 
   // ── Renderează toate mesajele ─────────────────────────────
@@ -227,34 +258,56 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function appendMessages(msgs) {
-    // dacă există placeholder "niciun mesaj" îl ștergem
     var placeholder = chatMsgs.querySelector('.chat-no-msgs');
     if (placeholder) placeholder.remove();
 
     var atBottom = chatMsgs.scrollHeight - chatMsgs.scrollTop - chatMsgs.clientHeight < 60;
 
     msgs.forEach(function (m) {
-      var el = document.createElement('div');
-      el.className = 'chat-msg ' + (m.mine ? 'chat-msg-mine' : 'chat-msg-theirs');
-      el.innerHTML =
-        '<div class="chat-bubble">' + esc(m.body) + '</div>' +
-        '<div class="chat-msg-time">' + esc(m.created_at) + '</div>';
-      chatMsgs.appendChild(el);
+      chatMsgs.appendChild(buildMessageEl(m));
     });
 
     if (atBottom) chatMsgs.scrollTop = chatMsgs.scrollHeight;
   }
 
+  // ── Imagine în chat ───────────────────────────────────────
+  chatImageInput.addEventListener('change', function () {
+    var file = chatImageInput.files[0];
+    if (!file) return;
+    pendingImage = file;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      chatImgThumb.src = e.target.result;
+      chatImgPreview.style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+    chatImageInput.value = '';
+  });
+
+  chatImgRemove.addEventListener('click', function () {
+    pendingImage = null;
+    chatImgThumb.src = '';
+    chatImgPreview.style.display = 'none';
+  });
+
   // ── Trimite mesaj ─────────────────────────────────────────
   function sendMessage() {
     var body = chatInput.value.trim();
-    if (!body || !activeConvoId) return;
+    if (!body && !pendingImage) return;
+    if (!activeConvoId) return;
 
     chatInput.value = '';
     chatInput.style.height = 'auto';
 
     var fd = new FormData();
     fd.append('body', body);
+
+    if (pendingImage) {
+      fd.append('image', pendingImage);
+      pendingImage = null;
+      chatImgThumb.src = '';
+      chatImgPreview.style.display = 'none';
+    }
 
     apiFetch('/conversations/' + activeConvoId + '/messages', {
       method: 'POST',
@@ -276,11 +329,84 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Auto-resize textarea
   chatInput.addEventListener('input', function () {
     chatInput.style.height = 'auto';
     chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
   });
+
+  // ── Forward modal ─────────────────────────────────────────
+  function openForwardModal(postId) {
+    forwardPostId = postId;
+    forwardOverlay.style.display = 'flex';
+    forwardSearch.value = '';
+    renderForwardList(allConvos);
+    forwardSearch.focus();
+
+    // dacă nu avem conversații încărcate, le încărcăm
+    if (allConvos.length === 0) {
+      apiFetch('/conversations').then(function (data) {
+        allConvos = data;
+        renderForwardList(data);
+      });
+    }
+  }
+
+  function closeForwardModal() {
+    forwardOverlay.style.display = 'none';
+    forwardPostId = null;
+  }
+
+  forwardModalClose.addEventListener('click', closeForwardModal);
+  forwardOverlay.addEventListener('click', function (e) {
+    if (e.target === forwardOverlay) closeForwardModal();
+  });
+
+  forwardSearch.addEventListener('input', function () {
+    var q = forwardSearch.value.toLowerCase();
+    var filtered = allConvos.filter(function (c) {
+      return c.other_user.name.toLowerCase().includes(q) ||
+             c.other_user.username.toLowerCase().includes(q);
+    });
+    renderForwardList(filtered);
+  });
+
+  function renderForwardList(convos) {
+    if (convos.length === 0) {
+      forwardConvoList.innerHTML = '<p class="msg-empty">Nicio conversație.</p>';
+      return;
+    }
+    forwardConvoList.innerHTML = convos.map(function (c) {
+      var u = c.other_user;
+      return '<div class="forward-convo-item" data-id="' + c.id + '" ' +
+        'data-name="' + esc(u.name) + '" ' +
+        'data-username="' + esc(u.username) + '" ' +
+        'data-color="' + esc(u.color) + '">' +
+        '<div class="msg-avatar" style="background:' + esc(u.color) + ';width:36px;height:36px;font-size:14px">' + esc(u.name[0].toUpperCase()) + '</div>' +
+        '<div><div class="forward-convo-name">' + esc(u.name) + '</div>' +
+        '<div class="forward-convo-username">@' + esc(u.username) + '</div></div>' +
+        '</div>';
+    }).join('');
+
+    forwardConvoList.querySelectorAll('.forward-convo-item').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var convoId = parseInt(el.dataset.id);
+        var fd = new FormData();
+        fd.append('post_id', forwardPostId);
+        fd.append('body', '');
+
+        apiFetch('/conversations/' + convoId + '/messages', { method: 'POST', body: fd })
+          .then(function (msg) {
+            closeForwardModal();
+            if (msg.error) return;
+            openPanel();
+            openChat(convoId, el.dataset.name, el.dataset.username, el.dataset.color);
+          });
+      });
+    });
+  }
+
+  // ── Expune openForwardModal global pentru butoane din pagină ──
+  window.openForwardModal = openForwardModal;
 
   // ── Buton "Trimite mesaj" de pe profil ────────────────────
   var startChatBtn = document.getElementById('startChatBtn');
@@ -307,6 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (e.key === 'Escape') {
       closeChat();
       closePanel();
+      closeForwardModal();
     }
   });
 });

@@ -6,7 +6,7 @@
     </div>
 
     <div class="fcard-body">
-      <%= form_with model: @post, url: post_path(@post), method: :patch, local: true do |f| %>
+      <%= form_with model: @post, url: post_path(@post), method: :patch, local: true, multipart: true do |f| %>
         <% if @post.errors.any? %>
           <div class="fcard-errors">
             <i class="fa fa-exclamation-circle"></i>
@@ -45,6 +45,32 @@
           <p class="tag-input-hint">Scrie și apasă <kbd>Enter</kbd> sau alege din sugestii</p>
         </div>
         <script>window.POST_EXISTING_TAGS = <%= @post.tags.map { |t| { id: t.id, name: t.name } }.to_json.html_safe %>;</script>
+
+        <div class="fcard-field">
+          <label class="fcard-label">Imagini</label>
+          <% if @post.images.attached? %>
+            <div class="image-existing-list">
+              <% @post.images.each do |img| %>
+                <div class="image-existing-item">
+                  <%= image_tag img, class: 'image-existing-thumb' %>
+                  <label class="image-remove-label">
+                    <%= check_box_tag 'post[remove_image_ids][]', img.id %>
+                    Șterge
+                  </label>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="image-upload-area" id="imageUploadArea">
+            <input type="file" id="imageInput" name="post[images][]" multiple accept="image/*" class="image-upload-input">
+            <label for="imageInput" class="image-upload-label">
+              <i class="fa fa-cloud-upload"></i>
+              <span>Adaugă imagini noi sau <u>apasă pentru a selecta</u></span>
+              <small>PNG, JPG, GIF — maxim 5 fișiere</small>
+            </label>
+            <div class="image-preview-list" id="imagePreviewList"></div>
+          </div>
+        </div>
 
         <div class="fcard-actions fcard-actions-inline">
           <%= f.submit 'Salvează', class: 'fcard-btn' %>

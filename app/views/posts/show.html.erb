@@ -1,0 +1,181 @@
+<div class="post-show">
+
+  <div class="post-show-card">
+
+    <div class="post-show-author">
+      <div class="post-avatar" style="background:<%= avatar_color(@post.user) %>">
+        <%= @post.user.name[0].upcase %>
+      </div>
+      <div class="post-author-info">
+        <%= link_to @post.user.name, user_path(@post.user), class: 'post-author-name' %>
+        <%= link_to "@#{@post.user.username}", user_path(@post.user), class: 'post-author-username' %>
+      </div>
+      <span class="post-date"><%= ro_date(@post.created_at) %></span>
+      <% if admin_user? && current_user != @post.user %>
+        <div class="post-show-admin-actions">
+          <%= link_to edit_post_path(@post), class: 'post-show-admin-btn', title: 'Editează' do %>
+            <i class="fa fa-pencil"></i>
+          <% end %>
+          <%= button_to post_path(@post), method: :delete, class: 'post-show-admin-btn danger', title: 'Șterge',
+                        data: { confirm: 'Ștergi această postare?' } do %>
+            <i class="fa fa-trash"></i>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <h1 class="post-show-title"><%= @post.title %></h1>
+
+    <div class="post-show-meta">
+      <span><i class="fa fa-eye"></i> <%= @post.views_count %></span>
+      <% if current_user %>
+        <button class="post-show-like-btn <%= 'liked' if @post.liked_by?(current_user) %>" id="postShowLikeBtn"
+                data-post-id="<%= @post.id %>">
+          <i class="fa <%= @post.liked_by?(current_user) ? 'fa-heart' : 'fa-heart-o' %>"></i>
+          <span id="postShowLikesCount"><%= @post.likes.size %></span>
+        </button>
+        <button class="post-show-forward-btn" id="postShowForwardBtn" data-post-id="<%= @post.id %>"
+                title="Trimite în chat">
+          <i class="fa fa-share"></i> Trimite
+        </button>
+      <% else %>
+        <span><i class="fa fa-heart-o"></i> <%= @post.likes.size %></span>
+      <% end %>
+      <span><i class="fa fa-comment-o"></i> <%= @comments.size %></span>
+      <% if @post.tags.any? %>
+        <span class="post-show-tags">
+          <% @post.tags.each do |tag| %>
+            <%= link_to "##{tag.name}", tag_path(tag.name), class: 'post-tag' %>
+          <% end %>
+        </span>
+      <% end %>
+    </div>
+
+    <div class="post-show-body"><%= @post.body %></div>
+
+    <% if @post.images.attached? %>
+      <div class="post-show-images">
+        <% @post.images.each do |img| %>
+          <a href="<%= rails_blob_url(img) %>" target="_blank" class="post-show-image-link">
+            <%= image_tag img, class: 'post-show-image' %>
+          </a>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+
+  <div class="post-show-comments-section">
+    <h3 class="post-show-comments-title"><i class="fa fa-comments"></i> Comentarii (<%= @comments.size %>)</h3>
+
+    <% if current_user %>
+      <%= form_with url: post_comments_path(@post), local: true, class: 'post-show-comment-form', id: 'postShowCommentForm' do |f| %>
+        <div class="post-show-comment-input-wrap">
+          <div class="post-avatar post-avatar-sm" style="background:<%= avatar_color(current_user) %>">
+            <%= current_user.name[0].upcase %>
+          </div>
+          <%= f.text_area :body, rows: 2, placeholder: 'Scrie un comentariu…', class: 'post-show-comment-input' %>
+          <%= f.submit 'Trimite', class: 'btn btn-primary btn-sm' %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="post-show-login-hint">
+        <%= link_to 'Autentifică-te', log_in_path %> pentru a lăsa un comentariu.
+      </p>
+    <% end %>
+
+    <div class="post-show-comments-list" id="postShowCommentsList">
+      <% if @comments.any? %>
+        <% @comments.each do |comment| %>
+          <div class="post-show-comment">
+            <div class="post-avatar post-avatar-sm" style="background:<%= avatar_color(comment.user) %>">
+              <%= comment.user.name[0].upcase %>
+            </div>
+            <div class="post-show-comment-body">
+              <div class="post-show-comment-header">
+                <%= link_to comment.user.name, user_path(comment.user), class: 'post-show-comment-author' %>
+                <span class="post-show-comment-date"><%= ro_date(comment.created_at) %></span>
+              </div>
+              <p><%= comment.body %></p>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="post-show-no-comments" id="noCommentsMsg">Niciun comentariu încă. Fii primul!</p>
+      <% end %>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    // ── Comentarii ─────────────────────────────────────────
+    var form = document.getElementById('postShowCommentForm');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var textarea = form.querySelector('textarea');
+        var body = textarea.value.trim();
+        if (!body) return;
+
+        var fd = new FormData();
+        fd.append('comment[body]', body);
+
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-CSRF-Token': csrf },
+          body: fd
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (c) {
+            if (c.error) return;
+            var list = document.getElementById('postShowCommentsList');
+            var placeholder = document.getElementById('noCommentsMsg');
+            if (placeholder) placeholder.remove();
+            var el = document.createElement('div');
+            el.className = 'post-show-comment';
+            el.innerHTML =
+              '<div class="post-avatar post-avatar-sm" style="background:#7a5a54">' + c.user.name[0].toUpperCase() + '</div>' +
+              '<div class="post-show-comment-body">' +
+                '<div class="post-show-comment-header">' +
+                  '<a href="/users/' + c.user.id + '" class="post-show-comment-author">' + c.user.name + '</a>' +
+                  '<span class="post-show-comment-date">' + c.created_at + '</span>' +
+                '</div>' +
+                '<p>' + c.body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>' +
+              '</div>';
+            list.appendChild(el);
+            textarea.value = '';
+          });
+      });
+    }
+
+    // ── Like ────────────────────────────────────────────────
+    var likeBtn = document.getElementById('postShowLikeBtn');
+    if (likeBtn) {
+      likeBtn.addEventListener('click', function () {
+        var postId = likeBtn.dataset.postId;
+        fetch('/posts/' + postId + '/toggle_like', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-CSRF-Token': csrf }
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            likeBtn.classList.toggle('liked', data.liked);
+            likeBtn.querySelector('i').className = 'fa ' + (data.liked ? 'fa-heart' : 'fa-heart-o');
+            document.getElementById('postShowLikesCount').textContent = data.likes_count;
+          });
+      });
+    }
+
+    // ── Forward ─────────────────────────────────────────────
+    var forwardBtn = document.getElementById('postShowForwardBtn');
+    if (forwardBtn && window.openForwardModal) {
+      forwardBtn.addEventListener('click', function () {
+        window.openForwardModal(parseInt(forwardBtn.dataset.postId));
+      });
+    }
+  })();
+</script>

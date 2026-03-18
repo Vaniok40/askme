@@ -27,10 +27,7 @@ Rails.application.routes.draw do
   delete 'interests/:tag_id', to: 'user_interests#destroy', as: :unfollow_tag
 
   resources :conversations, only: %i[index create] do
-    member do
-      get :messages
-    end
-    resources :messages, only: [:create] do
+    resources :messages, only: %i[create index] do
       collection do
         get :poll
       end

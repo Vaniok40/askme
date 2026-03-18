@@ -6,7 +6,7 @@
     </div>
 
     <div class="fcard-body">
-      <%= form_with model: @post, url: posts_path, local: true do |f| %>
+      <%= form_with model: @post, url: posts_path, local: true, multipart: true do |f| %>
         <% if @post.errors.any? %>
           <div class="fcard-errors">
             <i class="fa fa-exclamation-circle"></i>
@@ -43,6 +43,19 @@
           </div>
           <div id="tagHiddenFields"></div>
           <p class="tag-input-hint">Scrie și apasă <kbd>Enter</kbd> sau alege din sugestii</p>
+        </div>
+
+        <div class="fcard-field">
+          <label class="fcard-label">Imagini</label>
+          <div class="image-upload-area" id="imageUploadArea">
+            <input type="file" id="imageInput" name="post[images][]" multiple accept="image/*" class="image-upload-input">
+            <label for="imageInput" class="image-upload-label">
+              <i class="fa fa-cloud-upload"></i>
+              <span>Trage imaginile aici sau <u>apasă pentru a selecta</u></span>
+              <small>PNG, JPG, GIF — maxim 5 fișiere</small>
+            </label>
+            <div class="image-preview-list" id="imagePreviewList"></div>
+          </div>
         </div>
 
         <div class="fcard-actions fcard-actions-inline">

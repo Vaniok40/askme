@@ -205,3 +205,39 @@ document.addEventListener('DOMContentLoaded', function () {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 });
+
+/* ── Image upload preview ─────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function () {
+  var input   = document.getElementById('imageInput');
+  var preview = document.getElementById('imagePreviewList');
+  if (!input || !preview) return;
+
+  input.addEventListener('change', function () {
+    preview.innerHTML = '';
+    Array.from(input.files).slice(0, 5).forEach(function (file) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var item = document.createElement('div');
+        item.className = 'image-preview-item';
+        item.innerHTML = '<img src="' + e.target.result + '" class="image-preview-thumb" alt="">' +
+          '<span class="image-preview-name">' + file.name + '</span>';
+        preview.appendChild(item);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  var area = document.getElementById('imageUploadArea');
+  if (area) {
+    area.addEventListener('dragover', function (e) { e.preventDefault(); area.classList.add('drag-over'); });
+    area.addEventListener('dragleave', function () { area.classList.remove('drag-over'); });
+    area.addEventListener('drop', function (e) {
+      e.preventDefault();
+      area.classList.remove('drag-over');
+      var dt = new DataTransfer();
+      Array.from(e.dataTransfer.files).forEach(function (f) { dt.items.add(f); });
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    });
+  }
+});

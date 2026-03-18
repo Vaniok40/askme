@@ -103,9 +103,33 @@
     <div class="chat-messages" id="chatMessages">
       <div class="chat-loading"><i class="fa fa-spinner fa-spin"></i></div>
     </div>
+    <div class="chat-img-preview" id="chatImgPreview" style="display:none">
+      <img id="chatImgThumb" src="" alt="">
+      <button class="chat-img-preview-remove" id="chatImgRemove"><i class="fa fa-times"></i></button>
+    </div>
     <div class="chat-input-area">
+      <label class="chat-img-btn" title="Trimite imagine">
+        <i class="fa fa-image"></i>
+        <input type="file" id="chatImageInput" accept="image/*" style="display:none">
+      </label>
       <textarea id="chatInput" class="chat-input" placeholder="Scrie un mesaj…" rows="1"></textarea>
       <button class="chat-send-btn" id="chatSendBtn"><i class="fa fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <%# ── Modal forward postare ── %>
+  <div class="forward-modal-overlay" id="forwardOverlay" style="display:none">
+    <div class="forward-modal" id="forwardModal">
+      <div class="forward-modal-header">
+        <span><i class="fa fa-share"></i> Trimite postarea</span>
+        <button class="msg-panel-close" id="forwardModalClose"><i class="fa fa-times"></i></button>
+      </div>
+      <div class="forward-modal-body">
+        <input type="text" id="forwardSearch" class="msg-search-input" placeholder="Caută conversație…">
+        <div class="forward-convo-list" id="forwardConvoList">
+          <div class="msg-list-loading"><i class="fa fa-spinner fa-spin"></i></div>
+        </div>
+      </div>
     </div>
   </div>
 
