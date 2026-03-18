@@ -22,6 +22,7 @@
  *= require layout
  *= require users
  *= require questions
+ *= require feed
  *
  *= require_self
  */

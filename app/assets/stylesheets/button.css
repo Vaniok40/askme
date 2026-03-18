@@ -4,33 +4,62 @@
   font-size: 16px;
   text-decoration: none;
   padding: 15px 30px;
-  text-shadow: 2px 1px 1px rgba(0, 0, 0, 0.15);
   font-weight: bold;
-  border: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .button-dark {
-  background: #2e2f41;
+  background: #402E2A;
+  color: #fff;
+  border-color: #402E2A;
+}
+
+.button-dark:hover {
+  background: #5C3F3A;
+  border-color: #5C3F3A;
   color: #fff;
 }
 
 .button-danger {
-    background: #df4759;
-    color: #fff;
+  background: #df4759;
+  color: #fff;
+  border-color: #df4759;
+}
+
+.button-danger:hover {
+  background: #c73044;
+  border-color: #c73044;
+  color: #fff;
 }
 
 .button-green {
-  background: #005a55;
+  background: #402E2A;
+  color: #fff;
+  border-color: #402E2A;
+}
+
+.button-green:hover {
+  background: #5C3F3A;
+  border-color: #5C3F3A;
   color: #fff;
 }
 
 .button-light {
-  background: #00948a;
-  color: #fff;
+  background: transparent;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.button-light:hover {
+  background: #ffffff;
+  color: #402E2A;
+  border-color: #ffffff;
 }
 
 .button-small {
-  font-size: 15px;
-  line-height: 15px;
-  padding: 7px 15px;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 7px 14px;
 }

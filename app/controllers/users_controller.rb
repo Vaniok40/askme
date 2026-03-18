@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_action :load_user, except: [:index, :create, :new]
-  before_action :authorize_user, except: [:index, :new, :create, :show]
+  before_action :load_user, except: %i[index create new]
+  before_action :authorize_user, except: %i[index new create show disable enable]
+  before_action :authorize_admin!, only: %i[disable enable]
 
   def index
     @users = User.all
@@ -18,41 +19,55 @@ class UsersController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
-      redirect_to root_path, notice: 'Ok'
+      redirect_to root_path, notice: 'Welcome!'
     else
       render :new
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @user.update(user_params)
-      redirect_to user_path, notice: "Form is updated"
+      redirect_to user_path(@user), notice: 'Profile updated'
     else
       render 'edit'
     end
   end
 
   def show
-    @questions = @user.questions.order(created_at: :desc)
+    @questions       = @user.questions.order(created_at: :desc)
     @questions_count = @questions.count
-    @answers_count = @questions.with_answers.count
+    @answers_count   = @questions.with_answers.count
     @unanswered_count = @questions_count - @answers_count
 
-    @new_question = @user.questions.build
+    @posts           = @user.posts.includes(:tags, :likes, :comments).order(created_at: :desc).limit(5)
+    @posts_count     = @user.posts.count
+    @likes_received  = Like.joins(:post).where(posts: { user_id: @user.id }).count
+    @interests       = @user.followed_tags.order(:name)
+
+    @new_question    = @user.questions.build
   end
 
   def destroy
     @user.destroy
-    redirect_to root_path, notice: 'User is deleted'
+    redirect_to root_path, notice: 'User deleted'
+  end
+
+  def disable
+    @user.update(disabled: true)
+    redirect_to user_path(@user), notice: "#{@user.username} has been disabled."
+  end
+
+  def enable
+    @user.update(disabled: false)
+    redirect_to user_path(@user), notice: "#{@user.username} has been re-enabled."
   end
 
   private
 
   def authorize_user
-    reject_user unless @user == current_user
+    reject_user unless @user == current_user || admin_user?
   end
 
   def load_user
@@ -60,7 +75,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation,
-                                 :name, :username, :avatar_url, :color)
+    permitted = %i[email password password_confirmation name username color]
+    permitted << :admin if admin_user?
+    params.require(:user).permit(permitted)
   end
 end

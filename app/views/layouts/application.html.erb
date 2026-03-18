@@ -7,23 +7,38 @@
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_pack_tag 'application' %>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div class="header">
   <div class="container">
     <div class="header-logo">
-      <h1 class="header-title"><%= link_to "ASK.me", root_path %></h1>
+      <h1 class="header-title">
+        <%= link_to root_path do %>
+          <i class="fa fa-comments"></i> ASK.me
+        <% end %>
+      </h1>
     </div>
     <div class="header-nav">
       <% if current_user %>
-        <%= link_to "@#{current_user.username}", user_path(current_user) %> |
-        <%= link_to 'Log out', log_out_path %>
+        <% if admin_user? %>
+          <span class="header-admin-badge"><i class="fa fa-shield"></i> Admin</span>
+        <% end %>
+        <a href="#" class="header-nav-icon" title="Messages"><i class="fa fa-envelope"></i></a>
+        <a href="#" class="header-nav-icon" title="Notifications"><i class="fa fa-bell"></i></a>
+        <%= link_to user_path(current_user) do %>
+          <i class="fa fa-user"></i> @<%= current_user.username %>
+        <% end %>
+        <%= link_to log_out_path do %>
+          <i class="fa fa-sign-out"></i> Log out
+        <% end %>
       <% else %>
-        <%= link_to 'Sign up', sign_up_path,
-                    class: 'button button-light button-small' %>
-        <%= link_to 'Sign in', log_in_path,
-                    class: 'button button-light button-small' %>
+        <%= link_to sign_up_path, class: 'button button-light button-small' do %>
+          <i class="fa fa-user-plus"></i> Sign up
+        <% end %>
+        <%= link_to log_in_path, class: 'button button-light button-small' do %>
+          <i class="fa fa-sign-in"></i> Sign in
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -32,7 +47,7 @@
 <div class="content">
   <div class="container">
     <% if flash.any? %>
-      <div class="content-wrapper buffer-both">
+      <div class="buffer-both">
         <% flash.each do |name, message| %>
           <%= content_tag :div, message, class: "flash-#{name}" %>
         <% end %>

@@ -8,6 +8,7 @@
 require("@rails/ujs").start()
 require("@rails/activestorage").start()
 require("channels")
+require("../feed")
 require("jquery")
 
 import 'bootstrap/dist/js/bootstrap'

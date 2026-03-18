@@ -1,6 +1,5 @@
 class QuestionsController < ApplicationController
   before_action :load_question, only: [:show, :edit, :update, :destroy]
-
   before_action :authorize_user, except: [:create]
 
   def edit
@@ -32,13 +31,13 @@ class QuestionsController < ApplicationController
     user = @question.user
     @question.destroy
 
-    redirect_to user_path(user), notice: 'Question was deleted!'
+    redirect_to user_path(user), notice: 'Question deleted!'
   end
 
   private
 
   def authorize_user
-    reject_user unless @question.user == current_user
+    reject_user unless @question.user == current_user || admin_user?
   end
 
   def load_question

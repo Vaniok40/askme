@@ -4,10 +4,12 @@
 
 .question {
   background: white;
+  border: 1px solid #e0d4d0;
+  border-radius: 4px;
 }
 
 .question-content {
-  padding: 10px 15px;
+  padding: 14px 16px;
 }
 
 .question + .question {
@@ -20,24 +22,54 @@
 }
 
 .question-text {
-  color: #005a55;
+  color: #402E2A;
+  font-weight: 500;
 }
 
 .question-answer {
+  color: #333333;
 }
 
 .question-date {
-  color: #a0a0a0;
+  color: #999999;
   font-size: 12px;
 }
 
+.question-tags {
+  margin-top: 6px;
+}
+
+.question-tags a {
+  display: inline-block;
+  background: #faf6f5;
+  color: #402E2A;
+  border: 1px solid #e0d4d0;
+  border-radius: 3px;
+  padding: 2px 8px;
+  margin-right: 4px;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.question-tags a:hover {
+  background: #402E2A;
+  color: #fff;
+  border-color: #402E2A;
+}
+
 .question-actions {
-  font-size: 20px;
-  border-top: 1px solid #D9E6E5;
+  font-size: 18px;
+  border-top: 1px solid #e0d4d0;
   text-align: right;
-  padding: 10px 15px;
+  padding: 8px 16px;
 }
 
 .question-actions a {
-  margin-left: 10px;
+  margin-left: 12px;
+  color: #aaa;
+  transition: color 0.15s;
+}
+
+.question-actions a:hover {
+  color: #402E2A;
 }

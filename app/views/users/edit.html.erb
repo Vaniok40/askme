@@ -36,6 +36,15 @@
         <%= f.password_field :password_confirmation, class: 'form-text-field' %>
       </div>
 
+      <% if admin_user? %>
+        <div class="form-field">
+          <label class="form-label">
+            <%= f.check_box :admin %>
+            Administrator
+          </label>
+        </div>
+      <% end %>
+
       <div class="form-action buffer-top">
         <%= f.submit 'Save', class: 'button button-dark button-small', data: { confirm: 'Are you sure?' } %>
       </div>
