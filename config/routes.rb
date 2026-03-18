@@ -17,6 +17,9 @@ Rails.application.routes.draw do
     member do
       post :toggle_like
     end
+    collection do
+      get :my_posts
+    end
   end
 
   post   'interests/:tag_id', to: 'user_interests#create',  as: :follow_tag

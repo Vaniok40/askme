@@ -1,5 +1,5 @@
 <div class="form-page">
-  <h2><i class="fa fa-pencil"></i> New Post</h2>
+  <h2><i class="fa fa-pencil"></i> Postare nouă</h2>
 
   <%= form_with model: @post, url: posts_path, local: true, class: 'post-form' do |f| %>
     <% if @post.errors.any? %>
@@ -11,18 +11,30 @@
     <% end %>
 
     <div class="form-group">
-      <%= f.label :title, 'Title' %>
-      <%= f.text_field :title, class: 'form-control', placeholder: 'Give your post a title…' %>
+      <%= f.label :title, 'Titlu' %>
+      <%= f.text_field :title, class: 'form-control', placeholder: 'Dă un titlu postării tale…' %>
     </div>
 
     <div class="form-group">
-      <%= f.label :body, 'Content' %>
-      <%= f.text_area :body, class: 'form-control', rows: 8, placeholder: 'Write your post… use #hashtags to tag topics' %>
+      <%= f.label :body, 'Conținut' %>
+      <%= f.text_area :body, class: 'form-control', rows: 8, placeholder: 'Scrie postarea ta… folosește #hashtag-uri pentru a eticheta subiecte' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :tag_ids, 'Etichete' %>
+      <div class="tag-checkboxes">
+        <% @all_tags.each do |tag| %>
+          <label class="tag-checkbox-label">
+            <%= f.check_box :tag_ids, { multiple: true, checked: @post.tags.include?(tag) }, tag.id, false %>
+            #<%= tag.name %>
+          </label>
+        <% end %>
+      </div>
     </div>
 
     <div class="form-actions">
-      <%= f.submit 'Publish', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', feed_path, class: 'btn btn-secondary' %>
+      <%= f.submit 'Publică', class: 'btn btn-primary' %>
+      <%= link_to 'Anulează', feed_path, class: 'btn btn-secondary' %>
     </div>
   <% end %>
 </div>

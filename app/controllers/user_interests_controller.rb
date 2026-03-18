@@ -1,5 +1,5 @@
 class UserInterestsController < ApplicationController
-  before_action :reject_user
+  before_action :require_login!
 
   def create
     tag = Tag.find(params[:tag_id])

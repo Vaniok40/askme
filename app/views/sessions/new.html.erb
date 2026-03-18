@@ -1,23 +1,38 @@
-<div class="container content-wrapper buffer-both">
-  <h1 class="title-medium">Log in</h1>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <i class="fa fa-sign-in auth-icon"></i>
+      <h1 class="auth-title">Autentificare</h1>
+      <p class="auth-subtitle">Bine ai revenit!</p>
+    </div>
 
-  <div class="column-1-2">
-    <div class="form">
+    <div class="auth-card-body">
       <%= form_tag sessions_path do %>
-        <div class="form-field">
-          <%= label_tag :email, 'Login (email)', class: 'form-label' %>
-          <%= text_field_tag :email, params[:email], class: 'form-text-field' %>
+        <div class="auth-field">
+          <%= label_tag :email, 'Email', class: 'auth-label' %>
+          <div class="auth-input-wrap">
+            <i class="fa fa-envelope auth-input-icon"></i>
+            <%= text_field_tag :email, params[:email], class: 'auth-input', placeholder: 'adresa@exemplu.com' %>
+          </div>
         </div>
 
-        <div class="form-field">
-          <%= label_tag :password, 'Password', class: 'form-label' %>
-          <%= password_field_tag :password, '', class: 'form-text-field' %>
+        <div class="auth-field">
+          <%= label_tag :password, 'Parolă', class: 'auth-label' %>
+          <div class="auth-input-wrap">
+            <i class="fa fa-lock auth-input-icon"></i>
+            <%= password_field_tag :password, '', class: 'auth-input', placeholder: '••••••••' %>
+          </div>
         </div>
 
-        <div class="form-action">
-          <%= submit_tag "Log in", class: 'button button-dark button-small' %>
+        <div class="auth-actions">
+          <%= submit_tag "Autentificare", class: 'auth-btn' %>
         </div>
       <% end %>
+    </div>
+
+    <div class="auth-card-footer">
+      Nu ai cont?
+      <%= link_to 'Înregistrează-te', sign_up_path, class: 'auth-link' %>
     </div>
   </div>
 </div>

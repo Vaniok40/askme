@@ -9,17 +9,17 @@ class UsersController < ApplicationController
   end
 
   def new
-    redirect_to root_path, alert: 'You are already logged in!' if current_user.present?
+    redirect_to root_path, alert: 'Ești deja autentificat!' if current_user.present?
     @user = User.new
   end
 
   def create
-    redirect_to root_path, alert: 'You are already logged in!' if current_user.present?
+    redirect_to root_path, alert: 'Ești deja autentificat!' if current_user.present?
     @user = User.new(user_params)
 
     if @user.save
       session[:user_id] = @user.id
-      redirect_to root_path, notice: 'Welcome!'
+      redirect_to root_path, notice: 'Bine ai venit!'
     else
       render :new
     end
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to user_path(@user), notice: 'Profile updated'
+      redirect_to user_path(@user), notice: 'Profil actualizat'
     else
       render 'edit'
     end
@@ -51,17 +51,17 @@ class UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    redirect_to root_path, notice: 'User deleted'
+    redirect_to root_path, notice: 'Utilizator șters'
   end
 
   def disable
     @user.update(disabled: true)
-    redirect_to user_path(@user), notice: "#{@user.username} has been disabled."
+    redirect_to user_path(@user), notice: "#{@user.username} a fost dezactivat."
   end
 
   def enable
     @user.update(disabled: false)
-    redirect_to user_path(@user), notice: "#{@user.username} has been re-enabled."
+    redirect_to user_path(@user), notice: "#{@user.username} a fost reactivat."
   end
 
   private

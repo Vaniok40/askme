@@ -543,3 +543,78 @@
   gap: 10px;
   margin-top: 24px;
 }
+
+/* ── Tag checkboxes in post form ─────────────────────────── */
+.tag-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tag-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f5eeec;
+  border: 1px solid #e0d4d0;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #402E2A;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tag-checkbox-label input[type="checkbox"] {
+  accent-color: #402E2A;
+}
+
+.tag-checkbox-label:has(input:checked) {
+  background: #402E2A;
+  border-color: #402E2A;
+  color: #fff;
+}
+
+/* ── My posts page ───────────────────────────────────────── */
+.my-posts-page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.my-posts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.post-card-wrapper {
+  position: relative;
+}
+
+.my-post-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: -6px;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+.btn-sm {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.btn-danger {
+  background: #c0392b;
+  color: #fff;
+  border: none;
+}
+
+.btn-danger:hover {
+  background: #a93226;
+  color: #fff;
+}

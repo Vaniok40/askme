@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
+  before_action :require_login!, only: [:create, :edit, :update, :destroy]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_user, except: [:create]
+  before_action :authorize_user, only: [:edit, :update, :destroy]
 
   def edit
   end
@@ -13,7 +14,7 @@ class QuestionsController < ApplicationController
     @question.author = current_user
 
     if @question.save
-      redirect_to user_path(@question.user), notice: 'Question added!'
+      redirect_to user_path(@question.user), notice: 'Întrebare adăugată!'
     else
       render :edit
     end
@@ -21,7 +22,7 @@ class QuestionsController < ApplicationController
 
   def update
     if @question.update(question_params)
-      redirect_to user_path(@question.user), notice: 'Question saved!'
+      redirect_to user_path(@question.user), notice: 'Întrebare salvată!'
     else
       render :edit
     end
@@ -31,7 +32,7 @@ class QuestionsController < ApplicationController
     user = @question.user
     @question.destroy
 
-    redirect_to user_path(user), notice: 'Question deleted!'
+    redirect_to user_path(user), notice: 'Întrebare ștearsă!'
   end
 
   private

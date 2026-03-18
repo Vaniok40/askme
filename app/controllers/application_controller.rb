@@ -19,8 +19,12 @@ class ApplicationController < ActionController::Base
     current_user&.admin?
   end
 
+  def require_login!
+    redirect_to log_in_path, alert: 'Trebuie să fii autentificat pentru a face asta.' unless current_user
+  end
+
   def reject_user
-    redirect_to root_path, alert: 'You are not authorized!'
+    redirect_to root_path, alert: 'Nu ești autorizat!'
   end
 
   def authorize_admin!

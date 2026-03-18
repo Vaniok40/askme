@@ -1,0 +1,33 @@
+<div class="my-posts-page">
+  <div class="my-posts-header">
+    <h2 class="feed-title"><i class="fa fa-newspaper-o"></i> Postările mele</h2>
+    <%= link_to new_post_path, class: 'btn btn-primary' do %>
+      <i class="fa fa-pencil"></i> Postare nouă
+    <% end %>
+  </div>
+
+  <% if @posts.empty? %>
+    <div class="feed-empty">
+      <i class="fa fa-newspaper-o"></i>
+      <p>Nu ai nicio postare încă. Fii primul care împărtășește ceva!</p>
+    </div>
+  <% else %>
+    <div class="feed-posts" id="feedPosts">
+      <% @posts.each do |post| %>
+        <div class="post-card-wrapper">
+          <%= render 'posts/post_card', post: post %>
+          <div class="my-post-actions">
+            <%= link_to edit_post_path(post), class: 'btn btn-secondary btn-sm' do %>
+              <i class="fa fa-pencil"></i> Editează
+            <% end %>
+            <%= button_to post_path(post), method: :delete,
+                class: 'btn btn-danger btn-sm',
+                data: { confirm: 'Ești sigur că vrei să ștergi această postare?' } do %>
+              <i class="fa fa-trash"></i> Șterge
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

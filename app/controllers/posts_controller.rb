@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy, :toggle_like]
-  before_action :reject_user, only: [:new, :create]
+  before_action :require_login!, only: [:new, :create, :edit, :update, :destroy, :toggle_like, :my_posts]
 
   def show
     @post.increment!(:views_count)
@@ -36,14 +36,19 @@ class PostsController < ApplicationController
     end
   end
 
+  def my_posts
+    @posts = current_user.posts.includes(:tags, :likes, :comments).order(created_at: :desc)
+  end
+
   def new
     @post = Post.new
+    @all_tags = Tag.order(:name)
   end
 
   def create
     @post = current_user.posts.build(post_params)
     if @post.save
-      redirect_to feed_path, notice: 'Post published!'
+      redirect_to feed_path, notice: 'Postare publicată!'
     else
       render :new
     end
@@ -51,12 +56,13 @@ class PostsController < ApplicationController
 
   def edit
     authorize_post!
+    @all_tags = Tag.order(:name)
   end
 
   def update
     authorize_post!
     if @post.update(post_params)
-      redirect_to feed_path, notice: 'Post updated!'
+      redirect_to feed_path, notice: 'Postare actualizată!'
     else
       render :edit
     end
@@ -87,10 +93,10 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.require(:post).permit(:title, :body, tag_ids: [])
   end
 
   def authorize_post!
-    redirect_to feed_path, alert: 'Not authorized.' unless current_user == @post.user || admin_user?
+    redirect_to feed_path, alert: 'Nu ești autorizat.' unless current_user == @post.user || admin_user?
   end
 end

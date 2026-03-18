@@ -11,6 +11,7 @@ require("channels")
 require("../feed")
 require("jquery")
 
+import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap'
 
 $(function(){

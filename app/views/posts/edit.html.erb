@@ -1,5 +1,5 @@
 <div class="form-page">
-  <h2><i class="fa fa-pencil"></i> Edit Post</h2>
+  <h2><i class="fa fa-pencil"></i> Editează postarea</h2>
 
   <%= form_with model: @post, url: post_path(@post), method: :patch, local: true, class: 'post-form' do |f| %>
     <% if @post.errors.any? %>
@@ -11,18 +11,30 @@
     <% end %>
 
     <div class="form-group">
-      <%= f.label :title, 'Title' %>
+      <%= f.label :title, 'Titlu' %>
       <%= f.text_field :title, class: 'form-control' %>
     </div>
 
     <div class="form-group">
-      <%= f.label :body, 'Content' %>
+      <%= f.label :body, 'Conținut' %>
       <%= f.text_area :body, class: 'form-control', rows: 8 %>
     </div>
 
+    <div class="form-group">
+      <%= f.label :tag_ids, 'Etichete' %>
+      <div class="tag-checkboxes">
+        <% @all_tags.each do |tag| %>
+          <label class="tag-checkbox-label">
+            <%= f.check_box :tag_ids, { multiple: true, checked: @post.tags.include?(tag) }, tag.id, false %>
+            #<%= tag.name %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
     <div class="form-actions">
-      <%= f.submit 'Save', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', feed_path, class: 'btn btn-secondary' %>
+      <%= f.submit 'Salvează', class: 'btn btn-primary' %>
+      <%= link_to 'Anulează', feed_path, class: 'btn btn-secondary' %>
     </div>
   <% end %>
 </div>

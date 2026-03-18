@@ -1,5 +1,5 @@
 <div class="container content-wrapper buffer-both">
-  <h1 class="title-medium">Join our community!</h1>
+  <h1 class="title-medium">Alătură-te comunității!</h1>
 
   <div class="column-1-2">
     <%= form_for @user do |f| %>
@@ -14,32 +14,32 @@
       <% end %>
 
       <div class="form-field">
-        <%= f.label :email, 'Login (email)', class: 'form-label' %>
+        <%= f.label :email, 'Email', class: 'form-label' %>
         <%= f.text_field :email, class: 'form-text-field' %>
       </div>
 
       <div class="form-field">
-        <%= f.label :username, 'Nickname', class: 'form-label' %>
+        <%= f.label :username, 'Nume de utilizator', class: 'form-label' %>
         <%= f.text_field :username, class: 'form-text-field' %>
       </div>
 
       <div class="form-field">
-        <%= f.label :name, 'Name', class: 'form-label' %>
+        <%= f.label :name, 'Nume', class: 'form-label' %>
         <%= f.text_field :name, class: 'form-text-field' %>
       </div>
 
       <div class="form-field">
-        <%= f.label :password, 'Password', class: 'form-label' %>
+        <%= f.label :password, 'Parolă', class: 'form-label' %>
         <%= f.password_field :password, class: 'form-text-field' %>
       </div>
 
       <div class="form-field">
-        <%= f.label :password_confirmation, 'Confirm password', class: 'form-label' %>
+        <%= f.label :password_confirmation, 'Confirmă parola', class: 'form-label' %>
         <%= f.password_field :password_confirmation, class: 'form-text-field' %>
       </div>
 
       <div class="form-action">
-        <%= f.submit 'Register', class: 'button button-small button-dark' %>
+        <%= f.submit 'Înregistrare', class: 'button button-small button-dark' %>
       </div>
     <% end %>
   </div>

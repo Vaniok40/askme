@@ -24,20 +24,23 @@
         <% if admin_user? %>
           <span class="header-admin-badge"><i class="fa fa-shield"></i> Admin</span>
         <% end %>
-        <a href="#" class="header-nav-icon" title="Messages"><i class="fa fa-envelope"></i></a>
-        <a href="#" class="header-nav-icon" title="Notifications"><i class="fa fa-bell"></i></a>
+        <a href="#" class="header-nav-icon" title="Mesaje"><i class="fa fa-envelope"></i></a>
+        <a href="#" class="header-nav-icon" title="Notificări"><i class="fa fa-bell"></i></a>
+        <%= link_to my_posts_posts_path do %>
+          <i class="fa fa-newspaper-o"></i> Postările mele
+        <% end %>
         <%= link_to user_path(current_user) do %>
           <i class="fa fa-user"></i> @<%= current_user.username %>
         <% end %>
         <%= link_to log_out_path do %>
-          <i class="fa fa-sign-out"></i> Log out
+          <i class="fa fa-sign-out"></i> Deconectare
         <% end %>
       <% else %>
         <%= link_to sign_up_path, class: 'button button-light button-small' do %>
-          <i class="fa fa-user-plus"></i> Sign up
+          <i class="fa fa-user-plus"></i> Înregistrare
         <% end %>
         <%= link_to log_in_path, class: 'button button-light button-small' do %>
-          <i class="fa fa-sign-in"></i> Sign in
+          <i class="fa fa-sign-in"></i> Autentificare
         <% end %>
       <% end %>
     </div>

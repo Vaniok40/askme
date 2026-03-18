@@ -4,17 +4,17 @@
     <% if admin_user? && current_user != @user %>
       <div class="profile-admin-actions">
         <% if @user.disabled? %>
-          <%= button_to enable_user_path(@user), method: :patch, class: 'profile-admin-btn success', title: 'Enable account' do %>
+          <%= button_to enable_user_path(@user), method: :patch, class: 'profile-admin-btn success', title: 'Activează contul' do %>
             <i class="fa fa-check-circle"></i>
           <% end %>
         <% else %>
-          <%= button_to disable_user_path(@user), method: :patch, class: 'profile-admin-btn warning', title: 'Disable account',
-              data: { confirm: "Disable #{@user.username}?" } do %>
+          <%= button_to disable_user_path(@user), method: :patch, class: 'profile-admin-btn warning', title: 'Dezactivează contul',
+              data: { confirm: "Dezactivezi #{@user.username}?" } do %>
             <i class="fa fa-ban"></i>
           <% end %>
         <% end %>
-        <%= button_to user_path(@user), method: :delete, class: 'profile-admin-btn danger', title: 'Delete account',
-            data: { confirm: "Permanently delete #{@user.username}? This cannot be undone." } do %>
+        <%= button_to user_path(@user), method: :delete, class: 'profile-admin-btn danger', title: 'Șterge contul',
+            data: { confirm: "Ștergi permanent #{@user.username}? Aceasta nu poate fi anulată." } do %>
           <i class="fa fa-trash"></i>
         <% end %>
       </div>
@@ -25,7 +25,7 @@
         <%= display_avatar(@user) %>
       </div>
       <% if @user.disabled? %>
-        <span class="profile-disabled-badge"><i class="fa fa-ban"></i> Disabled</span>
+        <span class="profile-disabled-badge"><i class="fa fa-ban"></i> Dezactivat</span>
       <% end %>
     </div>
 
@@ -36,36 +36,36 @@
         <span class="user-admin-badge"><i class="fa fa-shield"></i> Admin</span>
       <% end %>
     </div>
-    <div class="profile-joined"><i class="fa fa-calendar"></i> Member since <%= @user.created_at.strftime('%B %Y') %></div>
+    <div class="profile-joined"><i class="fa fa-calendar"></i> Membru din <%= @user.created_at.strftime('%B %Y') %></div>
 
     <div class="profile-stats">
       <div class="profile-stat">
         <span class="profile-stat-value"><%= @posts_count %></span>
-        <span class="profile-stat-label">Posts</span>
+        <span class="profile-stat-label">Postări</span>
       </div>
       <div class="profile-stat">
         <span class="profile-stat-value"><%= @questions_count %></span>
-        <span class="profile-stat-label">Questions</span>
+        <span class="profile-stat-label">Întrebări</span>
       </div>
       <div class="profile-stat">
         <span class="profile-stat-value"><%= @answers_count %></span>
-        <span class="profile-stat-label">Answers</span>
+        <span class="profile-stat-label">Răspunsuri</span>
       </div>
       <div class="profile-stat">
         <span class="profile-stat-value"><%= @likes_received %></span>
-        <span class="profile-stat-label">Likes</span>
+        <span class="profile-stat-label">Aprecieri</span>
       </div>
     </div>
 
     <div class="profile-hero-actions">
       <% if current_user == @user || admin_user? %>
         <%= link_to edit_user_path(@user), class: 'btn btn-light-outline' do %>
-          <i class="fa fa-pencil"></i> Edit profile
+          <i class="fa fa-pencil"></i> Editează profilul
         <% end %>
       <% end %>
       <% if current_user && current_user != @user %>
         <%= link_to '', class: 'btn btn-light-outline', id: 'ask-button' do %>
-          <i class="fa fa-question-circle"></i> Ask me
+          <i class="fa fa-question-circle"></i> Întreabă-mă
         <% end %>
       <% end %>
     </div>
@@ -79,30 +79,30 @@
 
     <% if current_user == @user || admin_user? %>
       <div class="profile-card">
-        <h3 class="profile-card-title"><i class="fa fa-info-circle"></i> Account Info</h3>
+        <h3 class="profile-card-title"><i class="fa fa-info-circle"></i> Informații cont</h3>
         <dl class="profile-info-list">
           <dt>Email</dt>
           <dd><%= @user.email %></dd>
-          <dt>Username</dt>
+          <dt>Utilizator</dt>
           <dd>@<%= @user.username %></dd>
-          <dt>Display name</dt>
+          <dt>Nume afișat</dt>
           <dd><%= @user.name %></dd>
-          <dt>Profile color</dt>
+          <dt>Culoare profil</dt>
           <dd>
             <span class="profile-color-swatch" style="background:<%= @user.color %>"></span>
             <%= @user.color %>
           </dd>
-          <dt>Role</dt>
-          <dd><%= @user.admin? ? 'Administrator' : 'User' %></dd>
+          <dt>Rol</dt>
+          <dd><%= @user.admin? ? 'Administrator' : 'Utilizator' %></dd>
           <dt>Status</dt>
-          <dd><%= @user.disabled? ? 'Disabled' : 'Active' %></dd>
+          <dd><%= @user.disabled? ? 'Dezactivat' : 'Activ' %></dd>
         </dl>
       </div>
     <% end %>
 
     <% if @interests.any? %>
       <div class="profile-card">
-        <h3 class="profile-card-title"><i class="fa fa-tag"></i> Interests</h3>
+        <h3 class="profile-card-title"><i class="fa fa-tag"></i> Interese</h3>
         <div class="profile-interests">
           <% @interests.each do |tag| %>
             <%= link_to "##{tag.name}", tag_path(tag), class: 'post-tag' %>
@@ -117,7 +117,7 @@
 
     <% if @posts.any? %>
       <section class="profile-section">
-        <h2 class="profile-section-title"><i class="fa fa-newspaper-o"></i> Recent Posts</h2>
+        <h2 class="profile-section-title"><i class="fa fa-newspaper-o"></i> Postări recente</h2>
         <div class="feed-posts">
           <% @posts.each do |post| %>
             <%= render 'posts/post_card', post: post %>
@@ -125,14 +125,14 @@
         </div>
         <% if @posts_count > 5 %>
           <%= link_to feed_path, class: 'profile-see-all' do %>
-            See all posts <i class="fa fa-arrow-right"></i>
+            Vezi toate postările <i class="fa fa-arrow-right"></i>
           <% end %>
         <% end %>
       </section>
     <% end %>
 
     <section class="profile-section">
-      <h2 class="profile-section-title"><i class="fa fa-question-circle"></i> Questions</h2>
+      <h2 class="profile-section-title"><i class="fa fa-question-circle"></i> Întrebări</h2>
 
       <div class="user-question-form-div column-1-4 column-1-4-right" id="ask-form">
         <div class="user-question-form">
@@ -140,11 +140,11 @@
             <%= form_for @new_question do |f| %>
               <%= f.hidden_field :user_id %>
               <div class="form-field">
-                <%= f.label "Your question @#{@user.username}", class: 'form-label' %>
+                <%= f.label "Întrebarea ta @#{@user.username}", class: 'form-label' %>
                 <%= f.text_area :text, class: 'form-textarea' %>
               </div>
               <div class="form-action">
-                <%= submit_tag 'Ask', class: 'button button-small button-dark' %>
+                <%= submit_tag 'Întreabă', class: 'button button-small button-dark' %>
               </div>
             <% end %>
           </div>
@@ -152,7 +152,7 @@
       </div>
 
       <% if @questions.empty? %>
-        <p class="profile-empty">No questions yet.</p>
+        <p class="profile-empty">Nicio întrebare încă.</p>
       <% else %>
         <div class="questions-list">
           <% @questions.each do |question| %>
@@ -168,7 +168,7 @@
 
 <!-- side panel for feed posts -->
 <div class="side-panel" id="sidePanel">
-  <button class="side-panel-close" id="sidePanelClose" title="Close"><i class="fa fa-times"></i></button>
+  <button class="side-panel-close" id="sidePanelClose" title="Închide"><i class="fa fa-times"></i></button>
   <div class="side-panel-content" id="sidePanelContent">
     <div class="side-panel-loading"><i class="fa fa-spinner fa-spin"></i></div>
   </div>

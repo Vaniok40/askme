@@ -1,5 +1,5 @@
 <div class="container content-wrapper buffer-both">
-  <h1 class="title-medium">Change Profile</h1>
+  <h1 class="title-medium">Editează profilul</h1>
     <%= form_for(@user) do |f| %>
       <% if @user.errors.any? %>
         <div class="form-errors">
@@ -42,18 +42,19 @@
             <%= f.check_box :admin %>
             Administrator
           </label>
+
         </div>
       <% end %>
 
       <div class="form-action buffer-top">
-        <%= f.submit 'Save', class: 'button button-dark button-small', data: { confirm: 'Are you sure?' } %>
+        <%= f.submit 'Salvează', class: 'button button-dark button-small', data: { confirm: 'Ești sigur?' } %>
       </div>
 
       <div class="buffer-top">
-        <%= link_to 'Delete profile' + " @#{current_user.username}?", @user,
+        <%= link_to 'Șterge profilul' + " @#{current_user.username}?", @user,
                     method: :delete,
                     class: 'button button-danger button-small',
-                    data: { confirm: 'Are you sure?' } %>
+                    data: { confirm: 'Ești sigur?' } %>
       </div>
     <% end %>
   </div>

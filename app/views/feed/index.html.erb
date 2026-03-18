@@ -1,9 +1,9 @@
 <div class="feed-layout">
 
   <aside class="feed-interests">
-    <h3 class="feed-interests-title"><i class="fa fa-tag"></i> Interests</h3>
+    <h3 class="feed-interests-title"><i class="fa fa-tag"></i> Interese</h3>
     <% if current_user %>
-      <p class="feed-interests-hint">Follow topics to personalise your feed.</p>
+      <p class="feed-interests-hint">Urmărește subiecte pentru a personaliza fluxul tău.</p>
     <% end %>
     <ul class="feed-tag-list">
       <% @all_tags.each do |tag| %>
@@ -12,11 +12,11 @@
           <%= link_to "##{tag.name}", tag_path(tag), class: 'feed-tag-name' %>
           <% if current_user %>
             <% if followed %>
-              <%= button_to unfollow_tag_path(tag.id), method: :delete, class: 'btn-follow active', title: 'Unfollow' do %>
+              <%= button_to unfollow_tag_path(tag.id), method: :delete, class: 'btn-follow active', title: 'Nu mai urmări' do %>
                 <i class="fa fa-check"></i>
               <% end %>
             <% else %>
-              <%= button_to follow_tag_path(tag.id), method: :post, class: 'btn-follow', title: 'Follow' do %>
+              <%= button_to follow_tag_path(tag.id), method: :post, class: 'btn-follow', title: 'Urmărește' do %>
                 <i class="fa fa-plus"></i>
               <% end %>
             <% end %>
@@ -30,14 +30,14 @@
     <div class="feed-header">
       <h2 class="feed-title">
         <% if current_user&.interests&.any? %>
-          <i class="fa fa-star"></i> Your Feed
+          <i class="fa fa-star"></i> Fluxul tău
         <% else %>
-          <i class="fa fa-globe"></i> Discover
+          <i class="fa fa-globe"></i> Descoperă
         <% end %>
       </h2>
       <% if current_user %>
         <%= link_to new_post_path, class: 'btn btn-primary' do %>
-          <i class="fa fa-pencil"></i> New Post
+          <i class="fa fa-pencil"></i> Postare nouă
         <% end %>
       <% end %>
     </div>
@@ -45,7 +45,7 @@
     <% if @posts.empty? %>
       <div class="feed-empty">
         <i class="fa fa-newspaper-o"></i>
-        <p>No posts yet. Be the first to share something!</p>
+        <p>Nicio postare încă. Fii primul care împărtășește ceva!</p>
       </div>
     <% else %>
       <div class="feed-posts" id="feedPosts">
@@ -60,7 +60,7 @@
 
 <!-- Sliding side panel -->
 <div class="side-panel" id="sidePanel">
-  <button class="side-panel-close" id="sidePanelClose" title="Close">
+  <button class="side-panel-close" id="sidePanelClose" title="Închide">
     <i class="fa fa-times"></i>
   </button>
   <div class="side-panel-content" id="sidePanelContent">

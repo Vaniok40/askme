@@ -23,14 +23,14 @@ a {
   gap: 8px;
 }
 
-.header-nav > a {
+.header-nav > a:not(.button) {
   color: #ffffff;
   font-size: 15px;
   opacity: 0.9;
   transition: opacity 0.15s;
 }
 
-.header-nav > a:hover {
+.header-nav > a:not(.button):hover {
   opacity: 1;
   color: #ffffff;
 }
