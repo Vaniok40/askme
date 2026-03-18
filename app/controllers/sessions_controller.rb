@@ -1,27 +1,25 @@
 class SessionsController < ApplicationController
-  layout 'auth', only: [:new]
+  layout 'auth', only: %i[new create]
 
-  def new
-  end
+  def new; end
 
   def create
     @user = User.authenticate(params[:email], params[:password])
 
     if @user.present? && !@user.disabled?
       session[:user_id] = @user[:id]
-      redirect_to root_path, notice: 'You are logged in'
+      redirect_to root_path, notice: 'Bine ai venit!'
     elsif @user&.disabled?
-      flash.now.alert = 'This account has been disabled.'
+      flash.now.alert = 'Acest cont a fost dezactivat.'
       render :new
     else
-      flash.now.alert = 'Wrong email or password'
+      flash.now.alert = 'Email sau parolă incorectă.'
       render :new
     end
   end
 
   def destroy
     session[:user_id] = nil
-
-    redirect_to root_path, notice: 'You logged out!'
+    redirect_to root_path, notice: 'Te-ai deconectat!'
   end
 end

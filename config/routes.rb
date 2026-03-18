@@ -8,12 +8,13 @@ Rails.application.routes.draw do
       patch :enable
     end
   end
-  resources :sessions, only: [:new, :create, :destroy]
-  resources :questions, except: [:show, :new, :index]
-  resources :tags, param: :name, only: [:show]
+  resources :sessions, only: %i[new create destroy]
+  resources :tags, param: :name, only: [:show] do
+    collection { get :search }
+  end
 
-  resources :posts, only: [:new, :create, :show, :edit, :update, :destroy] do
-    resources :comments, only: [:create, :destroy]
+  resources :posts, only: %i[new create show edit update destroy] do
+    resources :comments, only: %i[create destroy]
     member do
       post :toggle_like
     end
@@ -25,7 +26,7 @@ Rails.application.routes.draw do
   post   'interests/:tag_id', to: 'user_interests#create',  as: :follow_tag
   delete 'interests/:tag_id', to: 'user_interests#destroy', as: :unfollow_tag
 
-  resources :conversations, only: [:index, :create] do
+  resources :conversations, only: %i[index create] do
     member do
       get :messages
     end

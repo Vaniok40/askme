@@ -28,10 +28,13 @@ class NotificationsController < ApplicationController
   private
 
   def serialize(n)
-    notifiable_url = nil
-    if n.notifiable_type == 'Post'
-      notifiable_url = "/posts/#{n.notifiable_id}"
-    end
+    post = case n.notifiable_type
+           when 'Post'    then n.notifiable
+           when 'Comment' then n.notifiable&.post
+           end
+
+    notifiable_url   = post ? "/posts/#{post.id}" : nil
+    notifiable_title = post&.title
 
     {
       id: n.id,
@@ -44,8 +47,8 @@ class NotificationsController < ApplicationController
         username: n.actor.username,
         color: helpers.avatar_color(n.actor)
       },
-      notifiable_url: notifiable_url,
-      notifiable_title: n.notifiable.respond_to?(:title) ? n.notifiable.title : nil
+      notifiable_url:,
+      notifiable_title:
     }
   end
 
@@ -55,7 +58,7 @@ class NotificationsController < ApplicationController
       'acum'
     elsif diff < 3600
       "acum #{diff / 60} min"
-    elsif diff < 86400
+    elsif diff < 86_400
       "acum #{diff / 3600} h"
     else
       time.strftime('%d %b')

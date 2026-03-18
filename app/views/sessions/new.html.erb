@@ -8,6 +8,12 @@
 
     <div class="auth-card-body">
       <%= form_tag sessions_path do %>
+        <% if flash[:alert] %>
+          <div class="auth-errors">
+            <i class="fa fa-exclamation-circle"></i>
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
         <div class="auth-field">
           <%= label_tag :email, 'Email', class: 'auth-label' %>
           <div class="auth-input-wrap">

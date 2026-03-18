@@ -42,10 +42,10 @@
 /* ── Panel stânga — lista conversații ───────────────────── */
 .msg-panel {
   position: fixed;
-  top: 57px;
+  top: 0;
   left: 0;
   width: 300px;
-  height: calc(100vh - 57px);
+  height: 100vh;
   background: #fff;
   box-shadow: 4px 0 24px rgba(64, 46, 42, 0.12);
   z-index: 1100;
@@ -442,10 +442,10 @@
 
 .notif-panel {
   position: fixed;
-  top: 57px;
+  top: 0;
   right: 0;
   width: 320px;
-  height: calc(100vh - 57px);
+  height: 100vh;
   background: #fff;
   box-shadow: -4px 0 24px rgba(64, 46, 42, 0.12);
   z-index: 1100;

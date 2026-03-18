@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  layout 'auth', only: [:new]
+  layout 'auth', only: %i[new create]
 
   before_action :load_user, except: %i[index create new]
   before_action :require_login!, only: %i[show]
@@ -8,7 +8,6 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
-    @tags = Tag.with_questions
   end
 
   def new
@@ -39,17 +38,10 @@ class UsersController < ApplicationController
   end
 
   def show
-    @questions       = @user.questions.order(created_at: :desc)
-    @questions_count = @questions.count
-    @answers_count   = @questions.with_answers.count
-    @unanswered_count = @questions_count - @answers_count
-
-    @posts           = @user.posts.includes(:tags, :likes, :comments).order(created_at: :desc).limit(5)
-    @posts_count     = @user.posts.count
-    @likes_received  = Like.joins(:post).where(posts: { user_id: @user.id }).count
-    @interests       = @user.followed_tags.order(:name)
-
-    @new_question    = @user.questions.build
+    @posts          = @user.posts.includes(:tags, :likes, :comments).order(created_at: :desc).limit(5)
+    @posts_count    = @user.posts.count
+    @likes_received = Like.joins(:post).where(posts: { user_id: @user.id }).count
+    @interests      = @user.followed_tags.order(:name)
   end
 
   def destroy

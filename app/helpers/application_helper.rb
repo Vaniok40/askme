@@ -1,4 +1,14 @@
 module ApplicationHelper
+  MONTHS_RO = %w[ianuarie februarie martie aprilie mai iunie iulie august septembrie octombrie noiembrie decembrie].freeze
+
+  def ro_date(date)
+    "#{date.day} #{MONTHS_RO[date.month - 1]} #{date.year}"
+  end
+
+  def ro_month_year(date)
+    "#{MONTHS_RO[date.month - 1].capitalize} #{date.year}"
+  end
+
   AVATAR_COLORS = %w[
     #3a5c8c #1a6b4a #7b3f00 #5c0a5a #0a4a5c
     #3a5c1a #5c3a1a #1a3a5c #5c1a3a #402E2A

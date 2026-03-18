@@ -21,8 +21,7 @@
  *
  *= require layout
  *= require users
- *= require questions
- *= require feed
+*= require feed
  *= require auth
  *= require messaging
  *= require toast

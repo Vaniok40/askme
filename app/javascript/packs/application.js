@@ -12,17 +12,12 @@ require("../toast")
 require("../feed")
 require("../messaging")
 require("../notifications")
+require("../tags")
 require("jquery")
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap'
 
-$(function(){
-    $('#ask-button').click(function(){
-        $('#ask-form').slideToggle(300);
-        return false;
-    });
-});
 
 $(function(){
     var canvas = document.getElementById("myCanvas");

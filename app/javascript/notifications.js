@@ -81,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function kindText(kind) {
-    if (kind === 'like')    return '<i class="fa fa-heart notif-kind-icon notif-kind-like"></i> a apreciat postarea ta';
-    if (kind === 'comment') return '<i class="fa fa-comment notif-kind-icon notif-kind-comment"></i> a lăsat un comentariu';
+    if (kind === 'like'    || kind === 'liked')    return '<i class="fa fa-heart notif-kind-icon notif-kind-like"></i> a apreciat postarea ta';
+    if (kind === 'comment' || kind === 'commented') return '<i class="fa fa-comment notif-kind-icon notif-kind-comment"></i> a lăsat un comentariu la';
     return esc(kind);
   }
 
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     list.innerHTML = notifs.map(function (n) {
       var unreadClass = n.read ? '' : ' notif-unread';
-      var title = n.notifiable_title ? ' la <span class="notif-post-title">' + esc(n.notifiable_title) + '</span>' : '';
+      var title = n.notifiable_title ? ' <span class="notif-post-title">\u201c' + esc(n.notifiable_title) + '\u201d</span>' : '';
       var url   = n.notifiable_url || null;
 
       return '<div class="notif-item' + unreadClass + '" data-id="' + n.id + '" data-url="' + (url ? esc(url) : '') + '">' +

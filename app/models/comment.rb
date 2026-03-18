@@ -9,6 +9,7 @@ class Comment < ApplicationRecord
 
   def notify_post_owner
     return if post.user_id == user_id
+
     Notification.create!(
       user: post.user,
       actor: user,

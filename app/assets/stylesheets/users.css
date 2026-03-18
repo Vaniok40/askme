@@ -1,6 +1,6 @@
 /* ── Profile hero (breaks out of .content container) ────── */
 .profile-hero {
-  padding: 36px 40px 28px;
+  padding: 48px 60px 36px;
   color: #fff;
   position: relative;
   margin: -20px -40px 0;
@@ -154,12 +154,12 @@
   gap: 28px;
   align-items: flex-start;
   padding-top: 28px;
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
 .profile-sidebar {
-  width: 240px;
+  width: 290px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -174,49 +174,111 @@
 .profile-card {
   background: #fff;
   border: 1px solid #e8e0de;
-  border-radius: 8px;
-  padding: 16px 18px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .profile-card-title {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  color: #402E2A;
+  color: #a08070;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 14px;
-}
-
-.profile-info-list {
+  letter-spacing: 0.7px;
   margin: 0;
-  font-size: 13px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 6px 12px;
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid #f0eae8;
 }
 
-.profile-info-list dt {
-  color: #999;
-  font-weight: 600;
-  white-space: nowrap;
+.profile-info-card {
+  padding: 0;
 }
 
-.profile-info-list dd {
-  margin: 0;
-  color: #333;
-  word-break: break-all;
+.profile-info-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-info-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
+  padding: 11px 20px;
+  border-bottom: 1px solid #f8f4f3;
+  transition: background 0.12s;
 }
 
-.profile-color-swatch {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  border: 1px solid rgba(0,0,0,0.1);
+.profile-info-row:last-child {
+  border-bottom: none;
+}
+
+.profile-info-row:hover {
+  background: #fdf9f8;
+}
+
+.profile-info-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #f5eeec;
+  color: #7a5a54;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
   flex-shrink: 0;
+}
+
+.profile-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.profile-info-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.profile-info-value {
+  font-size: 13px;
+  color: #2d2d2d;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.profile-role-badge,
+.profile-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.profile-role-badge.admin {
+  background: #fff3cd;
+  color: #7d5a00;
+}
+
+.profile-role-badge.user {
+  background: #e8f4fd;
+  color: #1a6fa8;
+}
+
+.profile-status-badge.active {
+  background: #d4edda;
+  color: #1a6e34;
+}
+
+.profile-status-badge.disabled {
+  background: #fde8e8;
+  color: #b02020;
 }
 
 .profile-interests {
@@ -328,42 +390,3 @@
   border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.user-questions {
-  background: #faf6f5;
-  border-radius: 4px;
-}
-
-.user-question-form {
-  padding: 16px;
-  margin-left: 10px;
-  background: #faf6f5;
-  border-radius: 4px;
-  border: 1px solid #e0d4d0;
-}
-
-@media (max-width: 960px) {
-  .user-question-form {
-    margin-left: 0;
-  }
-
-  .user-question-form-div {
-    display: none;
-  }
-}
-
-@media (min-width: 960px) {
-  .user-ask-button {
-    display: none;
-  }
-}
-
-
-/* ── Formular întrebare inline din profil ────────────────── */
-.inline-ask-form {
-  background: #faf6f5;
-  border: 1px solid #e8e0de;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  display: none;
-}

@@ -36,20 +36,12 @@
         <span class="user-admin-badge"><i class="fa fa-shield"></i> Admin</span>
       <% end %>
     </div>
-    <div class="profile-joined"><i class="fa fa-calendar"></i> Membru din <%= @user.created_at.strftime('%B %Y') %></div>
+    <div class="profile-joined"><i class="fa fa-calendar"></i> Membru din <%= ro_month_year(@user.created_at) %></div>
 
     <div class="profile-stats">
       <div class="profile-stat">
         <span class="profile-stat-value"><%= @posts_count %></span>
         <span class="profile-stat-label">Postări</span>
-      </div>
-      <div class="profile-stat">
-        <span class="profile-stat-value"><%= @questions_count %></span>
-        <span class="profile-stat-label">Întrebări</span>
-      </div>
-      <div class="profile-stat">
-        <span class="profile-stat-value"><%= @answers_count %></span>
-        <span class="profile-stat-label">Răspunsuri</span>
       </div>
       <div class="profile-stat">
         <span class="profile-stat-value"><%= @likes_received %></span>
@@ -64,9 +56,6 @@
         <% end %>
       <% end %>
       <% if current_user && current_user != @user %>
-        <%= link_to '', class: 'btn btn-light-outline', id: 'ask-button' do %>
-          <i class="fa fa-question-circle"></i> Întreabă-mă
-        <% end %>
         <button class="btn btn-light-outline"
                 id="startChatBtn"
                 data-recipient-id="<%= @user.id %>"
@@ -86,20 +75,57 @@
   <div class="profile-sidebar">
 
     <% if current_user == @user || admin_user? %>
-      <div class="profile-card">
+      <div class="profile-card profile-info-card">
         <h3 class="profile-card-title"><i class="fa fa-info-circle"></i> Informații cont</h3>
-        <dl class="profile-info-list">
-          <dt>Email</dt>
-          <dd><%= @user.email %></dd>
-          <dt>Utilizator</dt>
-          <dd>@<%= @user.username %></dd>
-          <dt>Nume afișat</dt>
-          <dd><%= @user.name %></dd>
-          <dt>Rol</dt>
-          <dd><%= @user.admin? ? 'Administrator' : 'Utilizator' %></dd>
-          <dt>Status</dt>
-          <dd><%= @user.disabled? ? 'Dezactivat' : 'Activ' %></dd>
-        </dl>
+        <div class="profile-info-rows">
+          <div class="profile-info-row">
+            <span class="profile-info-icon"><i class="fa fa-envelope"></i></span>
+            <div class="profile-info-content">
+              <span class="profile-info-label">Email</span>
+              <span class="profile-info-value"><%= @user.email %></span>
+            </div>
+          </div>
+          <div class="profile-info-row">
+            <span class="profile-info-icon"><i class="fa fa-at"></i></span>
+            <div class="profile-info-content">
+              <span class="profile-info-label">Utilizator</span>
+              <span class="profile-info-value">@<%= @user.username %></span>
+            </div>
+          </div>
+          <div class="profile-info-row">
+            <span class="profile-info-icon"><i class="fa fa-user"></i></span>
+            <div class="profile-info-content">
+              <span class="profile-info-label">Nume afișat</span>
+              <span class="profile-info-value"><%= @user.name %></span>
+            </div>
+          </div>
+          <div class="profile-info-row">
+            <span class="profile-info-icon"><i class="fa fa-shield"></i></span>
+            <div class="profile-info-content">
+              <span class="profile-info-label">Rol</span>
+              <span class="profile-info-value">
+                <% if @user.admin? %>
+                  <span class="profile-role-badge admin"><i class="fa fa-shield"></i> Administrator</span>
+                <% else %>
+                  <span class="profile-role-badge user"><i class="fa fa-user"></i> Utilizator</span>
+                <% end %>
+              </span>
+            </div>
+          </div>
+          <div class="profile-info-row">
+            <span class="profile-info-icon"><i class="fa fa-circle"></i></span>
+            <div class="profile-info-content">
+              <span class="profile-info-label">Status</span>
+              <span class="profile-info-value">
+                <% if @user.disabled? %>
+                  <span class="profile-status-badge disabled"><i class="fa fa-ban"></i> Dezactivat</span>
+                <% else %>
+                  <span class="profile-status-badge active"><i class="fa fa-check"></i> Activ</span>
+                <% end %>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     <% end %>
 
@@ -133,36 +159,6 @@
         <% end %>
       </section>
     <% end %>
-
-    <section class="profile-section">
-      <h2 class="profile-section-title"><i class="fa fa-question-circle"></i> Întrebări</h2>
-
-      <div class="inline-ask-form" id="ask-form">
-        <%= form_for @new_question do |f| %>
-          <%= f.hidden_field :user_id %>
-          <div class="fcard-field">
-            <%= f.label :text, "Întrebarea ta @#{@user.username}", class: 'fcard-label' %>
-            <div class="fcard-input-wrap">
-              <i class="fa fa-question fcard-input-icon fcard-input-icon-top"></i>
-              <%= f.text_area :text, class: 'fcard-input fcard-textarea', rows: 3 %>
-            </div>
-          </div>
-          <div class="fcard-actions">
-            <%= submit_tag 'Întreabă', class: 'fcard-btn' %>
-          </div>
-        <% end %>
-      </div>
-
-      <% if @questions.empty? %>
-        <p class="profile-empty">Nicio întrebare încă.</p>
-      <% else %>
-        <div class="questions-list">
-          <% @questions.each do |question| %>
-            <%= render partial: 'questions/question', object: question %>
-          <% end %>
-        </div>
-      <% end %>
-    </section>
 
   </div>
 

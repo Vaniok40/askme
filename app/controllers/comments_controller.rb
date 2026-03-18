@@ -8,8 +8,8 @@ class CommentsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          id:         @comment.id,
-          body:       @comment.body,
+          id: @comment.id,
+          body: @comment.body,
           created_at: @comment.created_at.strftime('%b %d, %Y'),
           user: { username: @comment.user.username, name: @comment.user.name }
         }

@@ -35,16 +35,16 @@
         </div>
 
         <div class="fcard-field">
-          <%= f.label :tag_ids, 'Etichete', class: 'fcard-label' %>
-          <div class="tag-checkboxes">
-            <% @all_tags.each do |tag| %>
-              <label class="tag-checkbox-label">
-                <%= f.check_box :tag_ids, { multiple: true, checked: @post.tags.include?(tag) }, tag.id, false %>
-                #<%= tag.name %>
-              </label>
-            <% end %>
+          <label class="fcard-label">Etichete</label>
+          <div class="tag-input-box" id="tagInputBox">
+            <div class="tag-input-pills" id="tagPills"></div>
+            <input type="text" id="tagInput" class="tag-input-field" placeholder="Adaugă etichetă…" autocomplete="off">
+            <ul class="tag-suggestions" id="postTagSuggestions"></ul>
           </div>
+          <div id="tagHiddenFields"></div>
+          <p class="tag-input-hint">Scrie și apasă <kbd>Enter</kbd> sau alege din sugestii</p>
         </div>
+        <script>window.POST_EXISTING_TAGS = <%= @post.tags.map { |t| { id: t.id, name: t.name } }.to_json.html_safe %>;</script>
 
         <div class="fcard-actions fcard-actions-inline">
           <%= f.submit 'Salvează', class: 'fcard-btn' %>

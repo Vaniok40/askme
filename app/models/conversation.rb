@@ -5,11 +5,11 @@ class Conversation < ApplicationRecord
 
   validates :sender_id, uniqueness: { scope: :recipient_id }
 
-  scope :involving, ->(user) {
+  scope :involving, lambda { |user|
     where(sender_id: user.id).or(where(recipient_id: user.id))
   }
 
-  scope :with_latest_message, -> {
+  scope :with_latest_message, lambda {
     left_joins(:messages)
       .select('conversations.*, MAX(messages.created_at) AS last_message_at')
       .group('conversations.id')
@@ -27,6 +27,6 @@ class Conversation < ApplicationRecord
   end
 
   def unread_count_for(user)
-    messages.where(read: false).where.not(user: user).count
+    messages.where(read: false).where.not(user:).count
   end
 end

@@ -8,8 +8,6 @@ class User < ApplicationRecord
 
   attr_accessor :password
 
-  has_many :questions, dependent: :destroy
-  has_many :authored_questions, class_name: 'Question', foreign_key: :author_id, dependent: :nullify
   has_many :posts, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy

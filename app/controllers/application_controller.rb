@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   def current_user
     return unless session[:user_id]
+
     user = User.find_by(id: session[:user_id])
     if user&.disabled?
       session.delete(:user_id)
@@ -21,6 +22,7 @@ class ApplicationController < ActionController::Base
 
   def require_login!
     return if current_user
+
     if request.format.json?
       render json: { error: 'Trebuie să fii autentificat pentru a face asta.' }, status: :unauthorized
     else

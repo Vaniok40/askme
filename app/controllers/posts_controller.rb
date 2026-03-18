@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy, :toggle_like]
-  before_action :require_login!, only: [:new, :create, :edit, :update, :destroy, :toggle_like, :my_posts]
+  before_action :set_post, only: %i[show edit update destroy toggle_like]
+  before_action :require_login!, only: %i[new create edit update destroy toggle_like my_posts]
 
   def show
     @post.increment!(:views_count)
@@ -23,14 +23,14 @@ class PostsController < ApplicationController
             color: helpers.avatar_color(@post.user)
           },
           tags: @post.tags.map(&:name),
-          comments: @comments.map { |c|
+          comments: @comments.map do |c|
             {
               id: c.id,
               body: c.body,
               created_at: c.created_at.strftime('%b %d, %Y'),
               user: { id: c.user.id, username: c.user.username, name: c.user.name }
             }
-          }
+          end
         }
       end
     end
@@ -83,7 +83,7 @@ class PostsController < ApplicationController
       @post.likes.create(user: current_user) if current_user
       liked = true
     end
-    render json: { liked: liked, likes_count: @post.likes.count }
+    render json: { liked:, likes_count: @post.likes.count }
   end
 
   private

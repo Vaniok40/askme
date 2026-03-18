@@ -1,16 +1,37 @@
 <div class="feed-layout">
 
   <aside class="feed-interests">
-    <h3 class="feed-interests-title"><i class="fa fa-tag"></i> Interese</h3>
-    <% if current_user %>
-      <p class="feed-interests-hint">Urmărește subiecte pentru a personaliza fluxul tău.</p>
+    <h3 class="feed-interests-title"><i class="fa fa-tag"></i> Filtrează după etichete</h3>
+
+    <div class="tag-search-wrap" id="feedTagSearch">
+      <div class="tag-search-input-wrap">
+        <i class="fa fa-search tag-search-icon"></i>
+        <input type="text" id="tagSearchInput" class="tag-search-input" placeholder="Caută etichetă…" autocomplete="off">
+      </div>
+      <ul class="tag-suggestions" id="tagSuggestions"></ul>
+    </div>
+
+    <div class="feed-active-tags" id="feedActiveTags">
+      <% @active_tag_ids.each do |tid| %>
+        <% tag = @all_tags.find { |t| t.id == tid } %>
+        <% next unless tag %>
+        <span class="feed-active-tag" data-id="<%= tag.id %>">#<%= tag.name %> <button class="feed-active-tag-remove">×</button></span>
+      <% end %>
+    </div>
+
+    <% if @active_tag_ids.any? %>
+      <a href="<%= feed_path %>" class="feed-clear-filter"><i class="fa fa-times-circle"></i> Șterge filtrele</a>
     <% end %>
-    <ul class="feed-tag-list">
-      <% @all_tags.each do |tag| %>
-        <% followed = current_user&.interests&.exists?(tag: tag) %>
-        <li class="feed-tag-item<%= ' followed' if followed %>">
-          <%= link_to "##{tag.name}", tag_path(tag), class: 'feed-tag-name' %>
-          <% if current_user %>
+
+    <% if current_user %>
+      <div class="feed-interests-divider"></div>
+      <h3 class="feed-interests-title" style="margin-top:0"><i class="fa fa-heart"></i> Interesele mele</h3>
+      <p class="feed-interests-hint">Urmărește subiecte pentru a personaliza fluxul tău.</p>
+      <ul class="feed-tag-list">
+        <% @all_tags.each do |tag| %>
+          <% followed = current_user.interests.exists?(tag: tag) %>
+          <li class="feed-tag-item<%= ' followed' if followed %>">
+            <span class="feed-tag-name">#<%= tag.name %></span>
             <% if followed %>
               <%= button_to unfollow_tag_path(tag.id), method: :delete, class: 'btn-follow active', title: 'Nu mai urmări' do %>
                 <i class="fa fa-check"></i>
@@ -20,10 +41,10 @@
                 <i class="fa fa-plus"></i>
               <% end %>
             <% end %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   </aside>
 
   <main class="feed-main">
