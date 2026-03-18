@@ -20,7 +20,7 @@ class PostsController < ApplicationController
             id: @post.user.id,
             username: @post.user.username,
             name: @post.user.name,
-            color: @post.user.color
+            color: helpers.avatar_color(@post.user)
           },
           tags: @post.tags.map(&:name),
           comments: @comments.map { |c|
@@ -28,7 +28,7 @@ class PostsController < ApplicationController
               id: c.id,
               body: c.body,
               created_at: c.created_at.strftime('%b %d, %Y'),
-              user: { username: c.user.username, name: c.user.name }
+              user: { id: c.user.id, username: c.user.username, name: c.user.name }
             }
           }
         }

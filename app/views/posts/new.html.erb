@@ -1,40 +1,56 @@
-<div class="form-page">
-  <h2><i class="fa fa-pencil"></i> Postare nouă</h2>
+<div class="fcard-page">
+  <div class="fcard fcard-wide">
+    <div class="fcard-header">
+      <i class="fa fa-pencil fcard-icon"></i>
+      <h1 class="fcard-title">Postare nouă</h1>
+    </div>
 
-  <%= form_with model: @post, url: posts_path, local: true, class: 'post-form' do |f| %>
-    <% if @post.errors.any? %>
-      <div class="flash-alert">
-        <% @post.errors.full_messages.each do |msg| %>
-          <div><%= msg %></div>
+    <div class="fcard-body">
+      <%= form_with model: @post, url: posts_path, local: true do |f| %>
+        <% if @post.errors.any? %>
+          <div class="fcard-errors">
+            <i class="fa fa-exclamation-circle"></i>
+            <ul>
+              <% @post.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
-      </div>
-    <% end %>
 
-    <div class="form-group">
-      <%= f.label :title, 'Titlu' %>
-      <%= f.text_field :title, class: 'form-control', placeholder: 'Dă un titlu postării tale…' %>
-    </div>
+        <div class="fcard-field">
+          <%= f.label :title, 'Titlu', class: 'fcard-label' %>
+          <div class="fcard-input-wrap">
+            <i class="fa fa-header fcard-input-icon"></i>
+            <%= f.text_field :title, class: 'fcard-input', placeholder: 'Dă un titlu postării tale…' %>
+          </div>
+        </div>
 
-    <div class="form-group">
-      <%= f.label :body, 'Conținut' %>
-      <%= f.text_area :body, class: 'form-control', rows: 8, placeholder: 'Scrie postarea ta… folosește #hashtag-uri pentru a eticheta subiecte' %>
-    </div>
+        <div class="fcard-field">
+          <%= f.label :body, 'Conținut', class: 'fcard-label' %>
+          <div class="fcard-input-wrap">
+            <i class="fa fa-align-left fcard-input-icon fcard-input-icon-top"></i>
+            <%= f.text_area :body, class: 'fcard-input fcard-textarea', rows: 8, placeholder: 'Scrie postarea ta… folosește #hashtag-uri pentru a eticheta subiecte' %>
+          </div>
+        </div>
 
-    <div class="form-group">
-      <%= f.label :tag_ids, 'Etichete' %>
-      <div class="tag-checkboxes">
-        <% @all_tags.each do |tag| %>
-          <label class="tag-checkbox-label">
-            <%= f.check_box :tag_ids, { multiple: true, checked: @post.tags.include?(tag) }, tag.id, false %>
-            #<%= tag.name %>
-          </label>
-        <% end %>
-      </div>
-    </div>
+        <div class="fcard-field">
+          <%= f.label :tag_ids, 'Etichete', class: 'fcard-label' %>
+          <div class="tag-checkboxes">
+            <% @all_tags.each do |tag| %>
+              <label class="tag-checkbox-label">
+                <%= f.check_box :tag_ids, { multiple: true, checked: @post.tags.include?(tag) }, tag.id, false %>
+                #<%= tag.name %>
+              </label>
+            <% end %>
+          </div>
+        </div>
 
-    <div class="form-actions">
-      <%= f.submit 'Publică', class: 'btn btn-primary' %>
-      <%= link_to 'Anulează', feed_path, class: 'btn btn-secondary' %>
+        <div class="fcard-actions fcard-actions-inline">
+          <%= f.submit 'Publică', class: 'fcard-btn' %>
+          <%= link_to 'Anulează', feed_path, class: 'fcard-cancel' %>
+        </div>
+      <% end %>
     </div>
-  <% end %>
+  </div>
 </div>

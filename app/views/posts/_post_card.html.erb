@@ -1,11 +1,16 @@
 <div class="post-card" data-post-id="<%= post.id %>">
   <div class="post-card-author">
-    <div class="post-avatar" style="background:<%= post.user.color %>">
+    <div class="post-avatar" style="background:<%= avatar_color(post.user) %>">
       <%= post.user.name[0].upcase %>
     </div>
     <div class="post-author-info">
-      <span class="post-author-name"><%= post.user.name %></span>
-      <span class="post-author-username">@<%= post.user.username %></span>
+      <% if current_user %>
+        <%= link_to post.user.name, user_path(post.user), class: 'post-author-name' %>
+        <%= link_to "@#{post.user.username}", user_path(post.user), class: 'post-author-username' %>
+      <% else %>
+        <span class="post-author-name"><%= post.user.name %></span>
+        <span class="post-author-username">@<%= post.user.username %></span>
+      <% end %>
     </div>
     <span class="post-date"><%= post.created_at.strftime('%b %d') %></span>
   </div>

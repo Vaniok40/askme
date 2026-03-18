@@ -1,5 +1,8 @@
 class UsersController < ApplicationController
+  layout 'auth', only: [:new]
+
   before_action :load_user, except: %i[index create new]
+  before_action :require_login!, only: %i[show]
   before_action :authorize_user, except: %i[index new create show disable enable]
   before_action :authorize_admin!, only: %i[disable enable]
 
@@ -75,7 +78,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    permitted = %i[email password password_confirmation name username color]
+    permitted = %i[email password password_confirmation name username]
     permitted << :admin if admin_user?
     params.require(:user).permit(permitted)
   end

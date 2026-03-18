@@ -20,7 +20,12 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login!
-    redirect_to log_in_path, alert: 'Trebuie să fii autentificat pentru a face asta.' unless current_user
+    return if current_user
+    if request.format.json?
+      render json: { error: 'Trebuie să fii autentificat pentru a face asta.' }, status: :unauthorized
+    else
+      redirect_to log_in_path, alert: 'Trebuie să fii autentificat pentru a face asta.'
+    end
   end
 
   def reject_user

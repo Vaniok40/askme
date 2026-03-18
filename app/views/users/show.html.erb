@@ -1,4 +1,4 @@
-<div class="profile-hero" style="background-color: <%= @user.color %>">
+<div class="profile-hero" style="background-color: <%= avatar_color(@user) %>">
   <div class="profile-hero-inner">
 
     <% if admin_user? && current_user != @user %>
@@ -67,6 +67,14 @@
         <%= link_to '', class: 'btn btn-light-outline', id: 'ask-button' do %>
           <i class="fa fa-question-circle"></i> Întreabă-mă
         <% end %>
+        <button class="btn btn-light-outline"
+                id="startChatBtn"
+                data-recipient-id="<%= @user.id %>"
+                data-recipient-name="<%= @user.name %>"
+                data-recipient-username="<%= @user.username %>"
+                data-recipient-color="<%= avatar_color(@user) %>">
+          <i class="fa fa-comment"></i> Trimite mesaj
+        </button>
       <% end %>
     </div>
 
@@ -87,11 +95,6 @@
           <dd>@<%= @user.username %></dd>
           <dt>Nume afișat</dt>
           <dd><%= @user.name %></dd>
-          <dt>Culoare profil</dt>
-          <dd>
-            <span class="profile-color-swatch" style="background:<%= @user.color %>"></span>
-            <%= @user.color %>
-          </dd>
           <dt>Rol</dt>
           <dd><%= @user.admin? ? 'Administrator' : 'Utilizator' %></dd>
           <dt>Status</dt>
@@ -134,21 +137,20 @@
     <section class="profile-section">
       <h2 class="profile-section-title"><i class="fa fa-question-circle"></i> Întrebări</h2>
 
-      <div class="user-question-form-div column-1-4 column-1-4-right" id="ask-form">
-        <div class="user-question-form">
-          <div class="form">
-            <%= form_for @new_question do |f| %>
-              <%= f.hidden_field :user_id %>
-              <div class="form-field">
-                <%= f.label "Întrebarea ta @#{@user.username}", class: 'form-label' %>
-                <%= f.text_area :text, class: 'form-textarea' %>
-              </div>
-              <div class="form-action">
-                <%= submit_tag 'Întreabă', class: 'button button-small button-dark' %>
-              </div>
-            <% end %>
+      <div class="inline-ask-form" id="ask-form">
+        <%= form_for @new_question do |f| %>
+          <%= f.hidden_field :user_id %>
+          <div class="fcard-field">
+            <%= f.label :text, "Întrebarea ta @#{@user.username}", class: 'fcard-label' %>
+            <div class="fcard-input-wrap">
+              <i class="fa fa-question fcard-input-icon fcard-input-icon-top"></i>
+              <%= f.text_area :text, class: 'fcard-input fcard-textarea', rows: 3 %>
+            </div>
           </div>
-        </div>
+          <div class="fcard-actions">
+            <%= submit_tag 'Întreabă', class: 'fcard-btn' %>
+          </div>
+        <% end %>
       </div>
 
       <% if @questions.empty? %>

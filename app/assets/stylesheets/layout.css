@@ -57,6 +57,12 @@ a {
 .content {
   padding: 20px 40px;
   color: #333333;
+  min-height: calc(100vh - 57px);
+  box-sizing: border-box;
+}
+
+.content:has(.fcard-page) {
+  padding: 0;
 }
 
 .content-wrapper {
@@ -76,10 +82,15 @@ a {
 }
 
 .header-nav-icon {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
   color: rgba(255, 255, 255, 0.75);
   font-size: 17px;
   padding: 4px 6px;
   border-radius: 4px;
+  line-height: 1;
   transition: color 0.15s, background 0.15s;
 }
 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>ASK.me</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= stylesheet_pack_tag 'application', media: 'all' %>
+  <%= javascript_pack_tag 'application' %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="header">
+  <div class="container">
+    <div class="header-logo">
+      <h1 class="header-title">
+        <%= link_to root_path do %>
+          <i class="fa fa-comments"></i> ASK.me
+        <% end %>
+      </h1>
+    </div>
+    <div class="header-nav">
+      <%= link_to sign_up_path, class: 'button button-light button-small' do %>
+        <i class="fa fa-user-plus"></i> Înregistrare
+      <% end %>
+      <%= link_to log_in_path, class: 'button button-light button-small' do %>
+        <i class="fa fa-sign-in"></i> Autentificare
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% if flash.any? %>
+  <div style="position:absolute;top:60px;left:0;right:0;z-index:999;padding:0 40px;">
+    <% flash.each do |name, message| %>
+      <%= content_tag :div, message, class: "flash-#{name}" %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= yield %>
+</body>
+</html>

@@ -1,27 +1,48 @@
 <div class="my-posts-page">
   <div class="my-posts-header">
-    <h2 class="feed-title"><i class="fa fa-newspaper-o"></i> Postările mele</h2>
+    <div>
+      <h2 class="my-posts-title"><i class="fa fa-newspaper-o"></i> Postările mele</h2>
+      <p class="my-posts-subtitle"><%= @posts.size %> <%= @posts.size == 1 ? 'postare' : 'postări' %> publicate</p>
+    </div>
     <%= link_to new_post_path, class: 'btn btn-primary' do %>
       <i class="fa fa-pencil"></i> Postare nouă
     <% end %>
   </div>
 
   <% if @posts.empty? %>
-    <div class="feed-empty">
+    <div class="my-posts-empty">
       <i class="fa fa-newspaper-o"></i>
-      <p>Nu ai nicio postare încă. Fii primul care împărtășește ceva!</p>
+      <p>Nu ai nicio postare încă.</p>
+      <%= link_to new_post_path, class: 'btn btn-primary' do %>
+        <i class="fa fa-pencil"></i> Scrie prima ta postare
+      <% end %>
     </div>
   <% else %>
-    <div class="feed-posts" id="feedPosts">
+    <div class="my-posts-grid">
       <% @posts.each do |post| %>
-        <div class="post-card-wrapper">
-          <%= render 'posts/post_card', post: post %>
-          <div class="my-post-actions">
-            <%= link_to edit_post_path(post), class: 'btn btn-secondary btn-sm' do %>
-              <i class="fa fa-pencil"></i> Editează
+        <div class="my-post-card">
+          <div class="my-post-card-body" data-post-id="<%= post.id %>">
+            <div class="my-post-meta-top">
+              <span class="my-post-date"><i class="fa fa-calendar-o"></i> <%= post.created_at.strftime('%d %b %Y') %></span>
+              <div class="my-post-stats">
+                <span><i class="fa fa-eye"></i> <%= post.views_count %></span>
+                <span><i class="fa fa-heart-o"></i> <%= post.likes.size %></span>
+                <span><i class="fa fa-comment-o"></i> <%= post.comments.size %></span>
+              </div>
+            </div>
+            <h3 class="my-post-title"><%= post.title %></h3>
+            <p class="my-post-excerpt"><%= truncate(post.body, length: 160) %></p>
+            <% if post.tags.any? %>
+              <div class="my-post-tags">
+                <% post.tags.each do |tag| %>
+                  <span class="post-tag">#<%= tag.name %></span>
+                <% end %>
+              </div>
             <% end %>
+          </div>
+          <div class="my-post-actions">
             <%= button_to post_path(post), method: :delete,
-                class: 'btn btn-danger btn-sm',
+                class: 'my-post-delete-btn',
                 data: { confirm: 'Ești sigur că vrei să ștergi această postare?' } do %>
               <i class="fa fa-trash"></i> Șterge
             <% end %>
@@ -31,3 +52,12 @@
     </div>
   <% end %>
 </div>
+
+<!-- Side panel pentru vizualizare postare -->
+<div class="side-panel" id="sidePanel">
+  <button class="side-panel-close" id="sidePanelClose" title="Închide"><i class="fa fa-times"></i></button>
+  <div class="side-panel-content" id="sidePanelContent">
+    <div class="side-panel-loading"><i class="fa fa-spinner fa-spin"></i></div>
+  </div>
+</div>
+<div class="side-panel-overlay" id="sidePanelOverlay"></div>

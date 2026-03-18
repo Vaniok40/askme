@@ -1,0 +1,332 @@
+/* ═══════════════════════════════════════════════════════════
+   SISTEM UNIFICAT DE FORMULARE — fcard + auth
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Pagină wrapper (centrare card) ─────────────────────── */
+.fcard-page,
+.auth-page {
+  min-height: calc(100vh - 57px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  background: linear-gradient(135deg, #f9f5f4 0%, #f0e8e5 100%);
+}
+
+/* .auth-page e folosit în layout-ul auth (fără .content wrapper) */
+.auth-page {
+  margin: 0;
+}
+
+/* .fcard-page e folosit în layout-ul normal — .content:has(.fcard-page) anulează padding-ul */
+.fcard-page {
+  margin: 0;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.fcard,
+.auth-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(64, 46, 42, 0.12);
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+}
+
+.fcard-wide,
+.auth-card-wide {
+  max-width: 620px;
+}
+
+/* ── Header card ─────────────────────────────────────────── */
+.fcard-header,
+.auth-card-header {
+  background: linear-gradient(135deg, #402E2A 0%, #6b3f38 100%);
+  padding: 32px 40px 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.fcard-icon,
+.auth-icon {
+  font-size: 30px;
+  opacity: 0.9;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.fcard-title,
+.auth-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* ── Body card ───────────────────────────────────────────── */
+.fcard-body,
+.auth-card-body {
+  padding: 32px 40px;
+}
+
+/* ── Grid 2 coloane (înregistrare) ───────────────────────── */
+.auth-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+
+.auth-fields-grid .auth-field:first-child {
+  grid-column: 1 / -1;
+}
+
+/* ── Câmp ────────────────────────────────────────────────── */
+.fcard-field,
+.auth-field {
+  margin-bottom: 18px;
+}
+
+/* ── Label ───────────────────────────────────────────────── */
+.fcard-label,
+.auth-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 6px;
+}
+
+/* ── Input wrapper cu icon ───────────────────────────────── */
+.fcard-input-wrap,
+.auth-input-wrap {
+  position: relative;
+}
+
+.fcard-input-icon,
+.auth-input-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c0a89e;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.fcard-input-icon-top {
+  top: 14px;
+  transform: none;
+}
+
+/* ── Input text ──────────────────────────────────────────── */
+.fcard-input,
+.auth-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid #e0d4d0;
+  border-radius: 8px;
+  padding: 10px 12px 10px 36px;
+  font-size: 14px;
+  color: #333;
+  background: #fafafa;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  outline: none;
+}
+
+.fcard-input:focus,
+.auth-input:focus {
+  border-color: #402E2A;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(64, 46, 42, 0.08);
+}
+
+.fcard-input::placeholder,
+.auth-input::placeholder {
+  color: #ccc;
+}
+
+/* ── Textarea ────────────────────────────────────────────── */
+.fcard-textarea {
+  resize: vertical;
+  min-height: 90px;
+  padding-top: 10px;
+  line-height: 1.5;
+}
+
+/* ── Checkbox ────────────────────────────────────────────── */
+.fcard-checkbox-field {
+  margin-bottom: 10px;
+}
+
+.fcard-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #444;
+  font-weight: 500;
+}
+
+.fcard-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #402E2A;
+  cursor: pointer;
+}
+
+/* ── Erori ───────────────────────────────────────────────── */
+.fcard-errors,
+.auth-errors {
+  background: #fff5f5;
+  border: 1px solid #fccaca;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #c0392b;
+  font-size: 13px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.fcard-errors .fa,
+.auth-errors .fa {
+  font-size: 15px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.fcard-errors ul,
+.auth-errors ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fcard-errors li,
+.auth-errors li {
+  margin-bottom: 3px;
+}
+
+.fcard-errors li:last-child,
+.auth-errors li:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Butoane acțiuni ─────────────────────────────────────── */
+.fcard-actions,
+.auth-actions {
+  margin-top: 24px;
+}
+
+.fcard-actions-inline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── Buton submit principal ──────────────────────────────── */
+.fcard-btn,
+.auth-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #402E2A 0%, #6b3f38 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  font-family: inherit;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+/* Buton full-width (login/register) */
+.auth-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.fcard-btn:hover,
+.auth-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  color: #fff;
+}
+
+.fcard-btn:active,
+.auth-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Link Anulează ───────────────────────────────────────── */
+.fcard-cancel {
+  font-size: 14px;
+  color: #999;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.fcard-cancel:hover {
+  color: #402E2A;
+}
+
+/* ── Zona periculoasă (ștergere cont) ────────────────────── */
+.fcard-danger-zone {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f0e8e5;
+  text-align: center;
+}
+
+.fcard-danger-link {
+  font-size: 13px;
+  color: #c0392b;
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.15s;
+}
+
+.fcard-danger-link:hover {
+  opacity: 1;
+  color: #c0392b;
+  text-decoration: underline;
+}
+
+/* ── Footer card (login/register) ────────────────────────── */
+.auth-card-footer {
+  background: #faf6f5;
+  border-top: 1px solid #f0e8e5;
+  padding: 18px 40px;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.auth-link {
+  color: #402E2A;
+  font-weight: 700;
+  margin-left: 4px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.auth-link:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}

@@ -356,3 +356,14 @@
     display: none;
   }
 }
+
+
+/* ── Formular întrebare inline din profil ────────────────── */
+.inline-ask-form {
+  background: #faf6f5;
+  border: 1px solid #e8e0de;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: none;
+}

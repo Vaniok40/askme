@@ -6,6 +6,7 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= stylesheet_pack_tag 'application', media: 'all' %>
   <%= javascript_pack_tag 'application' %>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -24,8 +25,14 @@
         <% if admin_user? %>
           <span class="header-admin-badge"><i class="fa fa-shield"></i> Admin</span>
         <% end %>
-        <a href="#" class="header-nav-icon" title="Mesaje"><i class="fa fa-envelope"></i></a>
-        <a href="#" class="header-nav-icon" title="Notificări"><i class="fa fa-bell"></i></a>
+        <button class="header-nav-icon" id="msgPanelToggle" title="Mesaje">
+          <i class="fa fa-envelope"></i>
+          <span class="msg-badge" id="msgBadge" style="display:none"></span>
+        </button>
+        <button class="header-nav-icon" id="notifToggle" title="Notificări">
+          <i class="fa fa-bell"></i>
+          <span class="msg-badge" id="notifBadge" style="display:none"></span>
+        </button>
         <%= link_to my_posts_posts_path do %>
           <i class="fa fa-newspaper-o"></i> Postările mele
         <% end %>
@@ -50,14 +57,65 @@
 <div class="content">
   <div class="container">
     <% if flash.any? %>
-      <div class="buffer-both">
-        <% flash.each do |name, message| %>
-          <%= content_tag :div, message, class: "flash-#{name}" %>
-        <% end %>
-      </div>
+      <div id="flashData" style="display:none"
+           data-flash="<%= html_escape(flash.map { |k,v| { type: k, message: v } }.to_json) %>"></div>
     <% end %>
+    <div id="toastContainer"></div>
     <%= yield %>
   </div>
 </div>
+
+<% if current_user %>
+  <%# ── Panel NOTIFICĂRI ── %>
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-panel-header">
+      <span><i class="fa fa-bell"></i> Notificări</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="notif-mark-all-btn" id="notifMarkAll">Marchează toate</button>
+        <button class="msg-panel-close" id="notifPanelClose"><i class="fa fa-times"></i></button>
+      </div>
+    </div>
+    <div class="notif-list" id="notifList">
+      <div class="msg-list-loading"><i class="fa fa-spinner fa-spin"></i></div>
+    </div>
+  </div>
+
+  <%# ── Side panel STÂNGA — lista conversații ── %>
+  <div class="msg-panel" id="msgPanel">
+    <div class="msg-panel-header">
+      <span><i class="fa fa-comments"></i> Mesaje</span>
+      <button class="msg-panel-close" id="msgPanelClose"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="msg-panel-search">
+      <input type="text" id="msgSearch" placeholder="Caută conversație…" class="msg-search-input">
+    </div>
+    <div class="msg-panel-list" id="msgList">
+      <div class="msg-list-loading"><i class="fa fa-spinner fa-spin"></i></div>
+    </div>
+  </div>
+
+  <%# ── Fereastra CHAT dreapta ── %>
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-window-header" id="chatHeader">
+      <div class="chat-header-user" id="chatHeaderUser"></div>
+      <button class="chat-window-close" id="chatWindowClose"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-loading"><i class="fa fa-spinner fa-spin"></i></div>
+    </div>
+    <div class="chat-input-area">
+      <textarea id="chatInput" class="chat-input" placeholder="Scrie un mesaj…" rows="1"></textarea>
+      <button class="chat-send-btn" id="chatSendBtn"><i class="fa fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <div class="msg-overlay" id="msgOverlay"></div>
+
+  <script>
+    window.CURRENT_USER_ID = <%= current_user.id %>;
+    window.CSRF_TOKEN = '<%= form_authenticity_token %>';
+  </script>
+<% end %>
+
 </body>
 </html>

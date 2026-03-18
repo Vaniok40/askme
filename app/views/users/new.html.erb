@@ -1,46 +1,75 @@
-<div class="container content-wrapper buffer-both">
-  <h1 class="title-medium">Alătură-te comunității!</h1>
+<div class="auth-page">
+  <div class="auth-card auth-card-wide">
+    <div class="auth-card-header">
+      <i class="fa fa-user-plus auth-icon"></i>
+      <h1 class="auth-title">Alătură-te comunității!</h1>
+      <p class="auth-subtitle">Creează-ți contul gratuit</p>
+    </div>
 
-  <div class="column-1-2">
-    <%= form_for @user do |f| %>
-      <% if @user.errors.any? %>
-        <div class="form-errors">
-          <ul>
-            <% for message in @user.errors.full_messages %>
-              <li class="form-error-message"><%= message %></li>
-            <% end %>
-          </ul>
+    <div class="auth-card-body">
+      <%= form_for @user do |f| %>
+        <% if @user.errors.any? %>
+          <div class="auth-errors">
+            <i class="fa fa-exclamation-circle"></i>
+            <ul>
+              <% @user.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="auth-fields-grid">
+          <div class="auth-field">
+            <%= f.label :email, 'Email', class: 'auth-label' %>
+            <div class="auth-input-wrap">
+              <i class="fa fa-envelope auth-input-icon"></i>
+              <%= f.text_field :email, class: 'auth-input', placeholder: 'adresa@exemplu.com' %>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <%= f.label :username, 'Nume de utilizator', class: 'auth-label' %>
+            <div class="auth-input-wrap">
+              <i class="fa fa-at auth-input-icon"></i>
+              <%= f.text_field :username, class: 'auth-input', placeholder: 'username123' %>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <%= f.label :name, 'Nume complet', class: 'auth-label' %>
+            <div class="auth-input-wrap">
+              <i class="fa fa-user auth-input-icon"></i>
+              <%= f.text_field :name, class: 'auth-input', placeholder: 'Ion Popescu' %>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <%= f.label :password, 'Parolă', class: 'auth-label' %>
+            <div class="auth-input-wrap">
+              <i class="fa fa-lock auth-input-icon"></i>
+              <%= f.password_field :password, class: 'auth-input', placeholder: '••••••••' %>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <%= f.label :password_confirmation, 'Confirmă parola', class: 'auth-label' %>
+            <div class="auth-input-wrap">
+              <i class="fa fa-lock auth-input-icon"></i>
+              <%= f.password_field :password_confirmation, class: 'auth-input', placeholder: '••••••••' %>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-actions">
+          <%= f.submit 'Înregistrare', class: 'auth-btn' %>
         </div>
       <% end %>
+    </div>
 
-      <div class="form-field">
-        <%= f.label :email, 'Email', class: 'form-label' %>
-        <%= f.text_field :email, class: 'form-text-field' %>
-      </div>
-
-      <div class="form-field">
-        <%= f.label :username, 'Nume de utilizator', class: 'form-label' %>
-        <%= f.text_field :username, class: 'form-text-field' %>
-      </div>
-
-      <div class="form-field">
-        <%= f.label :name, 'Nume', class: 'form-label' %>
-        <%= f.text_field :name, class: 'form-text-field' %>
-      </div>
-
-      <div class="form-field">
-        <%= f.label :password, 'Parolă', class: 'form-label' %>
-        <%= f.password_field :password, class: 'form-text-field' %>
-      </div>
-
-      <div class="form-field">
-        <%= f.label :password_confirmation, 'Confirmă parola', class: 'form-label' %>
-        <%= f.password_field :password_confirmation, class: 'form-text-field' %>
-      </div>
-
-      <div class="form-action">
-        <%= f.submit 'Înregistrare', class: 'button button-small button-dark' %>
-      </div>
-    <% end %>
+    <div class="auth-card-footer">
+      Ai deja cont?
+      <%= link_to 'Autentifică-te', log_in_path, class: 'auth-link' %>
+    </div>
   </div>
 </div>

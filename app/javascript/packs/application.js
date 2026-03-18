@@ -8,7 +8,10 @@
 require("@rails/ujs").start()
 require("@rails/activestorage").start()
 require("channels")
+require("../toast")
 require("../feed")
+require("../messaging")
+require("../notifications")
 require("jquery")
 
 import 'bootstrap/dist/css/bootstrap.min.css'

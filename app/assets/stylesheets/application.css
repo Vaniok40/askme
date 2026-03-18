@@ -23,6 +23,9 @@
  *= require users
  *= require questions
  *= require feed
+ *= require auth
+ *= require messaging
+ *= require toast
  *
  *= require_self
  */

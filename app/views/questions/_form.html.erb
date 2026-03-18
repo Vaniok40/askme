@@ -1,33 +1,37 @@
-<div class="form">
-  <%= form_for(@question) do |f| %>
-    <% if @question.errors.any? %>
-      <div class="form-errors">
-        <ul>
-          <% @question.errors.full_messages.each do |message| %>
-            <li class="form-error-message"><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <%= f.hidden_field :user_id %>
-
-    <div class="form-field">
-      <%= f.label :text, 'Întrebare', class: 'form-label' %>
-      <%= f.text_area :text, class: 'form-textarea' %>
-    </div>
-
-    <% if current_user.present? && current_user == @question.user %>
-      <div class="form-field">
-        <%= f.label :answer, 'Răspuns', class: 'form-label' %>
-        <%= f.text_area :answer, class: 'form-textarea' %>
-      </div>
-    <% end %>
-
-    <div class="form-action buffer-both">
-      <%= f.submit 'Trimite', class: 'button button-dark button-small' %>
-      sau
-      <%= link_to "Anulează", user_path(@question.user) %>
+<%= form_for(@question) do |f| %>
+  <% if @question.errors.any? %>
+    <div class="fcard-errors">
+      <i class="fa fa-exclamation-circle"></i>
+      <ul>
+        <% @question.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
-</div>
+
+  <%= f.hidden_field :user_id %>
+
+  <div class="fcard-field">
+    <%= f.label :text, 'Întrebare', class: 'fcard-label' %>
+    <div class="fcard-input-wrap">
+      <i class="fa fa-question fcard-input-icon fcard-input-icon-top"></i>
+      <%= f.text_area :text, class: 'fcard-input fcard-textarea', rows: 4 %>
+    </div>
+  </div>
+
+  <% if current_user.present? && current_user == @question.user %>
+    <div class="fcard-field">
+      <%= f.label :answer, 'Răspuns', class: 'fcard-label' %>
+      <div class="fcard-input-wrap">
+        <i class="fa fa-reply fcard-input-icon fcard-input-icon-top"></i>
+        <%= f.text_area :answer, class: 'fcard-input fcard-textarea', rows: 4 %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="fcard-actions fcard-actions-inline">
+    <%= f.submit 'Trimite', class: 'fcard-btn' %>
+    <%= link_to 'Anulează', user_path(@question.user), class: 'fcard-cancel' %>
+  </div>
+<% end %>

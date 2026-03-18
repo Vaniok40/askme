@@ -6,7 +6,11 @@
   <% @users.each do |user| %>
     <div class="users-list-item">
       <div class="user-image-div user-image-div-small">
-        <%= link_to display_avatar(user), user_path(user) %>
+        <% if current_user %>
+          <%= link_to display_avatar(user), user_path(user) %>
+        <% else %>
+          <%= display_avatar(user) %>
+        <% end %>
       </div>
     </div>
   <% end %>
