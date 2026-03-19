@@ -1,17 +1,21 @@
 Rails.application.routes.draw do
   root 'feed#index'
-  get 'feed', to: 'feed#index', as: :feed
+  get 'feed',     to: 'feed#index',    as: :feed
+  get 'discover', to: 'feed#discover', as: :discover
 
   resources :users do
     member do
       patch :disable
       patch :enable
+      post  :follow,   to: 'follows#create'
+      delete :unfollow, to: 'follows#destroy'
     end
   end
   resources :sessions, only: %i[new create destroy]
   resources :tags, param: :name, only: [:show] do
     collection { get :search }
   end
+  post 'tags', to: 'tags#create', as: :create_tag
 
   resources :posts, only: %i[new create show edit update destroy] do
     resources :comments, only: %i[create destroy]
@@ -20,6 +24,7 @@ Rails.application.routes.draw do
     end
     collection do
       get :my_posts
+      get :liked_posts
     end
   end
 

@@ -11,48 +11,78 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<div class="header">
-  <div class="container">
-    <div class="header-logo">
-      <h1 class="header-title">
-        <%= link_to root_path do %>
-          <i class="fa fa-compass"></i> InterestHub
-        <% end %>
-      </h1>
-    </div>
-    <div class="header-nav">
+<header class="header">
+  <div class="header-inner">
+
+    <a href="<%= root_path %>" class="header-brand">
+      <i class="fa fa-compass"></i>
+      <span class="header-brand-name">InterestHub</span>
+    </a>
+
+    <nav class="header-nav">
       <% if current_user %>
         <% if admin_user? %>
           <span class="header-admin-badge"><i class="fa fa-shield"></i> Admin</span>
         <% end %>
-        <button class="header-nav-icon" id="msgPanelToggle" title="Mesaje">
-          <i class="fa fa-envelope"></i>
-          <span class="msg-badge" id="msgBadge" style="display:none"></span>
-        </button>
-        <button class="header-nav-icon" id="notifToggle" title="Notificări">
-          <i class="fa fa-bell"></i>
-          <span class="msg-badge" id="notifBadge" style="display:none"></span>
-        </button>
-        <%= link_to my_posts_posts_path do %>
-          <i class="fa fa-newspaper-o"></i> Postările mele
+
+        <div class="header-nav-divider"></div>
+
+        <%= link_to feed_path, class: 'header-nav-link' do %>
+          <i class="fa fa-home"></i>
+          <span>Fluxul meu</span>
         <% end %>
-        <%= link_to user_path(current_user) do %>
-          <i class="fa fa-user"></i> @<%= current_user.username %>
+
+        <%= link_to discover_path, class: 'header-nav-link' do %>
+          <i class="fa fa-compass"></i>
+          <span>Descoperă</span>
         <% end %>
-        <%= link_to log_out_path do %>
-          <i class="fa fa-sign-out"></i> Deconectare
+
+        <%= link_to my_posts_posts_path, class: 'header-nav-link' do %>
+          <i class="fa fa-newspaper-o"></i>
+          <span>Postările mele</span>
         <% end %>
+
+        <%= link_to liked_posts_posts_path, class: 'header-nav-link' do %>
+          <i class="fa fa-heart-o"></i>
+          <span>Apreciate</span>
+        <% end %>
+
+        <div class="header-nav-divider"></div>
+
+        <div class="header-nav-icons">
+          <button class="header-nav-icon" id="msgPanelToggle" title="Mesaje">
+            <i class="fa fa-envelope"></i>
+            <span class="msg-badge" id="msgBadge" style="display:none"></span>
+          </button>
+          <button class="header-nav-icon" id="notifToggle" title="Notificări">
+            <i class="fa fa-bell"></i>
+            <span class="msg-badge" id="notifBadge" style="display:none"></span>
+          </button>
+        </div>
+
+        <%= link_to user_path(current_user), class: 'header-user-pill' do %>
+          <span class="header-user-avatar" style="background: <%= avatar_color(current_user) %>">
+            <%= current_user.name[0].upcase %>
+          </span>
+          <span class="header-user-name">@<%= current_user.username %></span>
+        <% end %>
+
+        <%= link_to log_out_path, class: 'header-nav-link header-nav-link--muted' do %>
+          <i class="fa fa-sign-out"></i>
+        <% end %>
+
       <% else %>
-        <%= link_to sign_up_path, class: 'button button-light button-small' do %>
+        <%= link_to sign_up_path, class: 'header-auth-btn header-auth-btn--outline' do %>
           <i class="fa fa-user-plus"></i> Înregistrare
         <% end %>
-        <%= link_to log_in_path, class: 'button button-light button-small' do %>
+        <%= link_to log_in_path, class: 'header-auth-btn header-auth-btn--solid' do %>
           <i class="fa fa-sign-in"></i> Autentificare
         <% end %>
       <% end %>
-    </div>
+    </nav>
+
   </div>
-</div>
+</header>
 
 <div class="content">
   <div class="container">

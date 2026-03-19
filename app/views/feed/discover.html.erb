@@ -1,10 +1,11 @@
-<div class="feed-page">
+<div class="neural-page">
 
-  <!-- Tag filter bar -->
-  <div class="feed-filter-bar">
-    <div class="feed-filter-bar-inner">
+  <!-- ── Bara de taguri (sus, orizontală) ──────────────────── -->
+  <div class="neural-tag-bar">
+    <div class="neural-tag-bar-inner">
+
       <!-- Text search -->
-      <form class="post-search-form" id="postSearchForm" action="<%= feed_path %>" method="get" role="search">
+      <form class="post-search-form" id="postSearchForm" action="<%= discover_path %>" method="get" role="search">
         <% @active_tag_ids.each do |tid| %>
           <input type="hidden" name="tag_ids[]" value="<%= tid %>">
         <% end %>
@@ -42,44 +43,54 @@
       </div>
 
       <% if @active_tag_ids.any? || @query.present? %>
-        <a href="<%= feed_path %>" class="feed-clear-filter-btn"><i class="fa fa-times-circle"></i> Resetează</a>
+        <a href="<%= discover_path %>" class="feed-clear-filter-btn">
+          <i class="fa fa-times-circle"></i> Resetează
+        </a>
       <% end %>
+
+      <div class="neural-tag-bar-actions">
+        <% if current_user %>
+          <%= link_to new_post_path, class: 'btn btn-primary btn-sm' do %>
+            <i class="fa fa-pencil"></i> Postare nouă
+          <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
 
-  <!-- Feed header + posts -->
-  <div class="feed-page-content">
-    <div class="feed-page-header">
-      <h2 class="feed-title">
-        <% if current_user %>
-          <i class="fa fa-star"></i> Fluxul tău
-        <% else %>
-          <i class="fa fa-globe"></i> Descoperă
-        <% end %>
-      </h2>
-      <% if current_user %>
-        <%= link_to new_post_path, class: 'btn btn-primary' do %>
-          <i class="fa fa-pencil"></i> Postare nouă
-        <% end %>
-      <% end %>
-    </div>
-
+  <!-- ── Canvas neural ─────────────────────────────────────── -->
+  <div class="neural-feed-wrap">
     <% if @posts.empty? %>
       <div class="feed-empty">
-        <i class="fa fa-users"></i>
-        <% if current_user && current_user.following.none? %>
-          <p>Nu urmărești pe nimeni încă.</p>
-          <%= link_to discover_path, class: 'btn btn-primary' do %>
-            <i class="fa fa-compass"></i> Descoperă utilizatori
-          <% end %>
-        <% else %>
-          <p>Nicio postare încă.</p>
-        <% end %>
+        <i class="fa fa-newspaper-o"></i>
+        <p>Nicio postare găsită.</p>
       </div>
     <% else %>
-      <div class="feed-posts-grid" id="feedPosts">
-        <% @posts.each do |post| %>
-          <%= render 'posts/post_card', post: post %>
+      <div class="neural-canvas" id="neuralCanvas">
+        <svg class="neural-svg" id="neuralSvg" aria-hidden="true"></svg>
+
+        <% @posts.each_with_index do |post, i| %>
+          <div class="neural-node"
+               data-post-id="<%= post.id %>"
+               data-index="<%= i %>"
+               style="--node-color: <%= avatar_color(post.user) %>">
+            <div class="neural-node-inner">
+              <div class="neural-node-avatar" style="background: <%= avatar_color(post.user) %>;">
+                <%= post.user.name[0].upcase %>
+              </div>
+            </div>
+            <div class="neural-tooltip">
+              <div class="neural-tooltip-title"><%= truncate(post.title, length: 60) %></div>
+              <div class="neural-tooltip-body"><%= truncate(post.body, length: 100) %></div>
+              <div class="neural-tooltip-meta">
+                <span><i class="fa fa-heart-o"></i> <%= post.likes.size %></span>
+                <span><i class="fa fa-comment-o"></i> <%= post.comments.size %></span>
+                <% if post.tags.any? %>
+                  <span class="neural-tooltip-tags"><%= post.tags.map { |t| "##{t.name}" }.first(3).join(' ') %></span>
+                <% end %>
+              </div>
+            </div>
+          </div>
         <% end %>
       </div>
     <% end %>

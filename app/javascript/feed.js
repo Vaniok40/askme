@@ -183,10 +183,41 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Open panel on post card click (feed + my-posts)
+  // Expune openPanel global pentru neural.js
+  window.openPostPanel = openPanel;
+
+  // ── Post text search (debounced) ──────────────────────────
+  var postSearchInput = document.getElementById('postSearchInput');
+  var postSearchClear = document.getElementById('postSearchClear');
+  var postSearchForm  = document.getElementById('postSearchForm');
+  var searchTimer;
+
+  if (postSearchInput && postSearchForm) {
+    postSearchInput.addEventListener('input', function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () { postSearchForm.submit(); }, 400);
+    });
+
+    postSearchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        clearTimeout(searchTimer);
+        postSearchForm.submit();
+      }
+    });
+  }
+
+  if (postSearchClear && postSearchInput && postSearchForm) {
+    postSearchClear.addEventListener('click', function () {
+      postSearchInput.value = '';
+      postSearchForm.submit();
+    });
+  }
+
+  // Open panel on post card click (feed + my-posts + neural nodes)
   document.addEventListener('click', function (e) {
     if (e.target.closest('a, button, form')) return;
-    var card = e.target.closest('.post-card, .my-post-card-body');
+    var card = e.target.closest('.post-card, .my-post-card-body, .neural-node');
     if (card) openPanel(card.dataset.postId);
   });
 

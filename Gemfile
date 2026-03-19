@@ -11,7 +11,11 @@ gem 'webpacker', '~> 4.0'
 
 group :development, :test do
   gem 'byebug'
+  gem 'factory_bot_rails'
   gem 'pry-rails'
+  gem 'rails-controller-testing'
+  gem 'rspec-rails', '~> 5.0'
+  gem 'shoulda-matchers', '~> 5.0'
   gem 'sqlite3', '~> 1.4.2'
 end
 

@@ -157,6 +157,16 @@ a.btn-light-outline:hover {
   color: #fff !important;
 }
 
+.btn-following {
+  border-color: rgba(255,255,255,0.5) !important;
+  background: rgba(255,255,255,0.15) !important;
+}
+
+.btn-following:hover {
+  background: rgba(180,50,50,0.7) !important;
+  border-color: rgba(180,50,50,0.8) !important;
+}
+
 /* ── Profile body ────────────────────────────────────────── */
 .profile-body {
   display: flex;

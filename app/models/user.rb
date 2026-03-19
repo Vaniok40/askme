@@ -17,6 +17,15 @@ class User < ApplicationRecord
   has_many :received_conversations, class_name: 'Conversation', foreign_key: :recipient_id, dependent: :destroy
   has_many :notifications, dependent: :destroy
 
+  has_many :follows_as_follower, class_name: 'Follow', foreign_key: :follower_id, dependent: :destroy
+  has_many :follows_as_followed, class_name: 'Follow', foreign_key: :followed_id, dependent: :destroy
+  has_many :following, through: :follows_as_follower, source: :followed
+  has_many :followers, through: :follows_as_followed, source: :follower
+
+  def following?(user)
+    following.exists?(user.id)
+  end
+
   before_validation :username_to_downcase
   before_save :encrypt_password
 

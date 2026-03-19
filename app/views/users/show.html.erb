@@ -44,6 +44,14 @@
         <span class="profile-stat-label">Postări</span>
       </div>
       <div class="profile-stat">
+        <span class="profile-stat-value"><%= @user.followers.count %></span>
+        <span class="profile-stat-label">Urmăritori</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat-value"><%= @user.following.count %></span>
+        <span class="profile-stat-label">Urmărește</span>
+      </div>
+      <div class="profile-stat">
         <span class="profile-stat-value"><%= @likes_received %></span>
         <span class="profile-stat-label">Aprecieri</span>
       </div>
@@ -56,6 +64,15 @@
         <% end %>
       <% end %>
       <% if current_user && current_user != @user %>
+        <% if current_user.following?(@user) %>
+          <%= button_to unfollow_user_path(@user), method: :delete, class: 'btn btn-light-outline btn-following' do %>
+            <i class="fa fa-check"></i> Urmărești
+          <% end %>
+        <% else %>
+          <%= button_to follow_user_path(@user), method: :post, class: 'btn btn-primary' do %>
+            <i class="fa fa-user-plus"></i> Urmărește
+          <% end %>
+        <% end %>
         <button class="btn btn-light-outline"
                 id="startChatBtn"
                 data-recipient-id="<%= @user.id %>"

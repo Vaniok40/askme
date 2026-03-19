@@ -1,18 +1,15 @@
 <div class="my-posts-page">
   <div class="my-posts-header">
     <div>
-      <h2 class="my-posts-title"><i class="fa fa-newspaper-o"></i> Postările mele</h2>
-      <p class="my-posts-subtitle"><%= @posts.size %> <%= @posts.size == 1 ? 'postare' : 'postări' %> publicate</p>
+      <h2 class="my-posts-title"><i class="fa fa-heart"></i> Postări apreciate</h2>
+      <p class="my-posts-subtitle"><%= @posts.size %> <%= @posts.size == 1 ? 'postare' : 'postări' %> apreciate</p>
     </div>
-    <%= link_to new_post_path, class: 'btn btn-primary' do %>
-      <i class="fa fa-pencil"></i> Postare nouă
-    <% end %>
   </div>
 
   <% if @posts.empty? %>
     <div class="my-posts-empty">
-      <i class="fa fa-newspaper-o"></i>
-      <p>Nu ai nicio postare încă.</p>
+      <i class="fa fa-heart-o"></i>
+      <p>Nu ai apreciat nicio postare încă.</p>
     </div>
   <% else %>
     <div class="my-posts-grid">
@@ -20,11 +17,14 @@
         <div class="my-post-card">
           <div class="my-post-card-body" data-post-id="<%= post.id %>">
             <div class="my-post-meta-top">
-              <span class="my-post-date"><i class="fa fa-calendar-o"></i> <%= ro_date(post.created_at) %></span>
+              <div class="my-post-liked-author">
+                <span class="my-post-author-name">
+                  <i class="fa fa-user-o"></i>
+                  <%= link_to post.user.name, user_path(post.user), class: 'my-post-author-link' %>
+                </span>
+              </div>
               <div class="my-post-stats">
-                <span><i class="fa fa-eye"></i> <%= post.views_count %></span>
-                <% liked = current_user && post.likes.any? { |l| l.user_id == current_user.id } %>
-                <span class="<%= 'post-card-liked' if liked %>"><i class="fa <%= liked ? 'fa-heart' : 'fa-heart-o' %>"></i> <%= post.likes.size %></span>
+                <span class="post-card-liked"><i class="fa fa-heart"></i> <%= post.likes.size %></span>
                 <span><i class="fa fa-comment-o"></i> <%= post.comments.size %></span>
               </div>
             </div>
@@ -38,20 +38,13 @@
               </div>
             <% end %>
           </div>
-          <div class="my-post-actions">
-            <%= button_to post_path(post), method: :delete,
-                class: 'my-post-delete-btn',
-                data: { confirm: 'Ești sigur că vrei să ștergi această postare?' } do %>
-              <i class="fa fa-trash"></i> Șterge
-            <% end %>
-          </div>
         </div>
       <% end %>
     </div>
   <% end %>
 </div>
 
-<!-- Side panel pentru vizualizare postare -->
+<!-- Side panel -->
 <div class="side-panel" id="sidePanel">
   <button class="side-panel-close" id="sidePanelClose" title="Închide"><i class="fa fa-times"></i></button>
   <div class="side-panel-content" id="sidePanelContent">

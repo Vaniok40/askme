@@ -38,7 +38,8 @@
 
   <div class="post-card-meta">
     <span><i class="fa fa-eye"></i> <%= post.views_count %></span>
-    <span><i class="fa fa-heart-o"></i> <%= post.likes.size %></span>
+    <% liked = current_user && post.likes.any? { |l| l.user_id == current_user.id } %>
+    <span class="<%= 'post-card-liked' if liked %>"><i class="fa <%= liked ? 'fa-heart' : 'fa-heart-o' %>"></i> <%= post.likes.size %></span>
     <span><i class="fa fa-comment-o"></i> <%= post.comments.size %></span>
     <% if current_user %>
       <button class="post-forward-btn" onclick="openForwardModal(<%= post.id %>); event.stopPropagation();" title="Trimite în chat">

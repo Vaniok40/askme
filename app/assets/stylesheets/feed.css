@@ -1,22 +1,87 @@
-/* ── Feed layout ─────────────────────────────────────────── */
+/* ── Feed page (personalized, full-width) ────────────────── */
+.feed-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ── Filter bar (sticky, full width) ────────────────────── */
+.feed-filter-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  position: sticky;
+  top: 56px;
+  z-index: 100;
+  overflow: visible;
+}
+
+.feed-filter-bar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 101;
+}
+
+.feed-filter-bar-inner .tag-search-wrap {
+  width: 240px;
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+.feed-filter-bar-inner .feed-active-tags {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* ── Feed content area ───────────────────────────────────── */
+.feed-page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.feed-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* ── Posts grid (horizontal, multi-column) ───────────────── */
+.feed-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+/* ── Legacy feed layout (kept for compat) ────────────────── */
 .feed-layout {
   display: flex;
-  gap: 28px;
+  gap: 24px;
   align-items: flex-start;
-  max-width: 900px;
+  max-width: 940px;
   margin: 0 auto;
 }
 
 /* ── Interests sidebar ───────────────────────────────────── */
 .feed-interests {
-  width: 200px;
+  width: 210px;
   flex-shrink: 0;
-  background: #fff;
-  border: 1px solid #e8e0de;
-  border-radius: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
   padding: 16px;
   position: sticky;
   top: 16px;
+  box-shadow: var(--sh-sm);
 }
 
 .feed-interests-title {
@@ -125,17 +190,19 @@
 
 /* ── Post card ───────────────────────────────────────────── */
 .post-card {
-  background: #fff;
-  border: 1px solid #e8e0de;
-  border-radius: 10px;
-  padding: 18px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px 22px;
   cursor: pointer;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition: box-shadow var(--t), border-color var(--t), transform var(--t);
+  box-shadow: var(--sh-sm);
 }
 
 .post-card:hover {
-  border-color: #402E2A;
-  box-shadow: 0 4px 14px rgba(64, 46, 42, 0.1);
+  border-color: var(--brand);
+  box-shadow: var(--sh-md);
+  transform: translateY(-1px);
 }
 
 .post-card-author {
@@ -166,43 +233,45 @@
 }
 
 .post-author-name {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
-  color: #222;
+  color: var(--text);
 }
 
 a.post-author-name:hover {
-  color: #402E2A;
+  color: var(--brand);
   text-decoration: underline;
 }
 
 .post-author-username {
   font-size: 12px;
-  color: #999;
+  color: var(--text-3);
 }
 
 a.post-author-username:hover {
-  color: #402E2A;
+  color: var(--brand);
   text-decoration: underline;
 }
 
 .post-date {
   font-size: 12px;
-  color: #bbb;
+  color: var(--text-4);
   margin-left: auto;
 }
 
 .post-card-title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
-  color: #222;
-  margin: 0 0 8px;
+  color: var(--text);
+  margin: 0 0 7px;
+  line-height: 1.35;
+  letter-spacing: -0.1px;
 }
 
 .post-card-body {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.55;
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
   margin: 0 0 12px;
 }
 
@@ -214,23 +283,31 @@ a.post-author-username:hover {
 }
 
 .post-tag {
-  font-size: 12px;
-  color: #402E2A;
-  background: #f5eeec;
+  font-size: 11.5px;
+  color: var(--brand);
+  background: var(--brand-light);
   border-radius: 20px;
-  padding: 2px 9px;
-  font-weight: 500;
+  padding: 2px 10px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  transition: background var(--t);
 }
+
+.post-tag:hover { background: #ecddd9; }
 
 .post-card-meta {
   display: flex;
-  gap: 16px;
-  font-size: 13px;
-  color: #aaa;
+  gap: 14px;
+  font-size: 12.5px;
+  color: var(--text-3);
 }
 
 .post-card-meta .fa {
   margin-right: 3px;
+}
+
+.post-card-liked {
+  color: #c0392b;
 }
 
 /* ── Side panel ──────────────────────────────────────────── */
@@ -238,12 +315,12 @@ a.post-author-username:hover {
   position: fixed;
   top: 0;
   right: 0;
-  width: 420px;
+  width: 440px;
   height: 100vh;
-  background: #fff;
-  box-shadow: -6px 0 30px rgba(0, 0, 0, 0.12);
+  background: var(--bg-card);
+  box-shadow: -2px 0 0 var(--border), -8px 0 40px rgba(0,0,0,0.10);
   transform: translateX(100%);
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1001;
   overflow-y: auto;
   display: flex;
@@ -549,38 +626,43 @@ a.post-author-username:hover {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: var(--r-md);
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   text-decoration: none;
-  transition: background 0.15s;
+  font-family: inherit;
+  letter-spacing: 0.1px;
+  transition: background var(--t), box-shadow var(--t), transform var(--t);
 }
+
+.btn:hover  { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
 
 .btn.btn-primary,
 a.btn.btn-primary {
-  background: #402E2A;
+  background: var(--brand);
   color: #fff;
-  border: none;
-  box-shadow: none;
+  box-shadow: 0 2px 8px rgba(64,46,42,0.22);
 }
 
 .btn.btn-primary:hover,
 a.btn.btn-primary:hover {
-  background: #5a3e39;
+  background: var(--brand-mid);
   color: #fff;
-  box-shadow: none;
+  box-shadow: 0 4px 12px rgba(64,46,42,0.28);
 }
 
 .btn-secondary {
-  background: #f0eae8;
-  color: #402E2A;
+  background: var(--brand-light);
+  color: var(--brand);
+  border: 1px solid #ddd0cc;
 }
 
 .btn-secondary:hover {
-  background: #e0d4d0;
-  color: #402E2A;
+  background: #ecddd9;
+  color: var(--brand);
 }
 
 
@@ -687,6 +769,64 @@ a.btn.btn-primary:hover {
   background: #f5eeec;
 }
 
+/* ── Post text search ────────────────────────────────────── */
+.post-search-form {
+  flex-shrink: 0;
+}
+
+.post-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #e0d4d0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px 10px;
+  gap: 6px;
+  width: 240px;
+  transition: border-color 0.15s;
+}
+
+.post-search-wrap:focus-within {
+  border-color: #402E2A;
+}
+
+.post-search-icon {
+  color: #aaa;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.post-search-input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  flex: 1;
+  background: transparent;
+  color: #333;
+  min-width: 0;
+}
+
+.post-search-input::placeholder {
+  color: #ccc;
+}
+
+.post-search-clear {
+  background: none;
+  border: none;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.post-search-clear:hover {
+  color: #402E2A;
+}
+
 /* ── Feed tag search ─────────────────────────────────────── */
 .tag-search-wrap {
   position: relative;
@@ -760,6 +900,37 @@ a.btn.btn-primary:hover {
   text-decoration: none;
 }
 .feed-clear-filter:hover { text-decoration: underline; }
+
+.feed-clear-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 20px;
+  border: 1.5px solid #e0c8c5;
+  color: #c0392b;
+  background: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 102;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.feed-clear-filter-btn:hover:not(.disabled) {
+  background: #fdf0ef;
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+.feed-clear-filter-btn.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
 
 .feed-interests-divider {
   border: none;
@@ -879,6 +1050,21 @@ a.btn.btn-primary:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.my-post-liked-author {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.my-post-author-link {
+  color: #402E2A;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.my-post-author-link:hover {
+  text-decoration: underline;
 }
 
 .my-post-actions {
@@ -1366,3 +1552,259 @@ a.btn.btn-primary:hover {
   border-color: #402E2A;
   background: #faf6f5;
 }
+
+/* ══════════════════════════════════════════════════════════
+   NEURAL FEED
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Pagina wrapper ──────────────────────────────────────── */
+.neural-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ── Bara de taguri (sus) ────────────────────────────────── */
+.neural-tag-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  position: sticky;
+  top: 56px;
+  z-index: 100;
+  overflow: visible;
+}
+
+.neural-tag-bar-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 101;
+}
+
+.neural-tag-bar-inner .tag-search-wrap {
+  width: 220px;
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+.neural-tag-bar-inner .feed-active-tags {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.neural-tag-bar-actions {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Strip interese ──────────────────────────────────────── */
+.neural-interests-strip {
+  background: #fdfaf9;
+  border-bottom: 1px solid #f0eae8;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.neural-interests-strip::-webkit-scrollbar { display: none; }
+
+.neural-interests-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #a08070;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.neural-interests-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.neural-interest-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 10px;
+  border-radius: 20px;
+  border: 1px solid #e0d4d0;
+  background: #fff;
+  white-space: nowrap;
+  font-size: 12px;
+  transition: border-color 0.15s;
+}
+
+.neural-interest-tag .feed-tag-name {
+  font-size: 12px;
+  color: #555;
+}
+
+.neural-interest-tag.followed {
+  border-color: #402E2A;
+  background: #402E2A;
+}
+
+.neural-interest-tag.followed .feed-tag-name {
+  color: #fff;
+}
+
+/* ── Canvas neural ───────────────────────────────────────── */
+.neural-feed-wrap {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.neural-canvas {
+  position: relative;
+  width: 100%;
+  /* înălțimea e setată de JS în funcție de nr noduri */
+}
+
+.neural-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.neural-svg line {
+  stroke: #b09488;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.5;
+  transition: opacity 0.3s, stroke 0.3s;
+}
+
+/* ── Nod neural ──────────────────────────────────────────── */
+.neural-node {
+  position: absolute;
+  z-index: 1;
+  cursor: pointer;
+  /* dimensiunea e setată de JS via --node-size */
+}
+
+.neural-node-inner {
+  width: var(--node-size, 58px);
+  height: var(--node-size, 58px);
+  border-radius: 50%;
+  border: 2.5px solid var(--node-color, #402E2A);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.25s,
+              border-color 0.2s;
+  will-change: transform;
+}
+
+.neural-node:hover .neural-node-inner {
+  transform: scale(1.22);
+  box-shadow: 0 6px 24px rgba(64,46,42,0.18);
+  border-width: 3px;
+}
+
+.neural-node-avatar {
+  width: calc(var(--node-size, 58px) - 14px);
+  height: calc(var(--node-size, 58px) - 14px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  user-select: none;
+}
+
+/* ── Tooltip ─────────────────────────────────────────────── */
+.neural-tooltip {
+  position: absolute;
+  bottom: calc(var(--node-size, 58px) + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: #fff;
+  border: 1px solid #e0d4d0;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+  padding: 12px 14px;
+  width: 230px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s, transform 0.18s;
+  z-index: 50;
+  text-align: left;
+}
+
+.neural-node:hover .neural-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Repoziționare tooltip dacă nodul e prea sus */
+.neural-node.tooltip-below .neural-tooltip {
+  bottom: auto;
+  top: calc(var(--node-size, 58px) + 10px);
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.neural-node.tooltip-below:hover .neural-tooltip {
+  transform: translateX(-50%) translateY(0);
+}
+
+.neural-tooltip-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 5px;
+  line-height: 1.35;
+}
+
+.neural-tooltip-body {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.neural-tooltip-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: #aaa;
+  flex-wrap: wrap;
+}
+
+.neural-tooltip-meta .fa {
+  margin-right: 2px;
+}
+
+.neural-tooltip-tags {
+  color: #a08070;
+  font-weight: 500;
+}
+
+/* Mici variații de dimensiune per index (JS le setează) */
+.neural-node[data-size="lg"] { --node-size: 70px; }
+.neural-node[data-size="lg"] .neural-node-avatar { font-size: 22px; }
+.neural-node[data-size="md"] { --node-size: 58px; }
+.neural-node[data-size="sm"] { --node-size: 46px; }
+.neural-node[data-size="sm"] .neural-node-avatar { font-size: 14px; }

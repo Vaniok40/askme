@@ -51,27 +51,55 @@ document.addEventListener('DOMContentLoaded', function () {
     function fetchSuggestions(q) {
       fetch('/tags/search?q=' + encodeURIComponent(q), { headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json(); })
-        .then(function (tags) { renderSuggestions(tags); })
+        .then(function (tags) { renderSuggestions(tags, q); })
         .catch(function () {});
     }
 
-    function renderSuggestions(tags) {
+    function renderSuggestions(tags, q) {
       var filtered = tags.filter(function (t) {
         return !selected.find(function (s) { return s.id === t.id; });
       });
-      if (!filtered.length) { hideSuggestions(); return; }
 
-      suggestions.innerHTML = filtered.map(function (t) {
+      var items = filtered.map(function (t) {
         return '<li class="tag-suggestion-item" data-id="' + t.id + '" data-name="' + esc(t.name) + '">#' + esc(t.name) + '</li>';
-      }).join('');
+      });
+
+      /* Dacă textul tastat nu se potrivește exact cu niciun tag existent, oferă opțiunea de a-l crea */
+      var normalizedQ = (q || '').trim().toLowerCase().replace(/^#/, '').replace(/[^a-z0-9_]/g, '');
+      var exactMatch = normalizedQ && tags.find(function (t) { return t.name === normalizedQ; });
+      var alreadySelected = normalizedQ && selected.find(function (s) { return s.name === normalizedQ; });
+      if (normalizedQ && !exactMatch && !alreadySelected) {
+        items.push('<li class="tag-suggestion-item tag-suggestion-create" data-new="true" data-name="' + esc(normalizedQ) + '"><i class="fa fa-plus"></i> Creează <strong>#' + esc(normalizedQ) + '</strong></li>');
+      }
+
+      if (!items.length) { hideSuggestions(); return; }
+
+      suggestions.innerHTML = items.join('');
       suggestions.style.display = 'block';
 
       suggestions.querySelectorAll('.tag-suggestion-item').forEach(function (li) {
         li.addEventListener('mousedown', function (e) {
           e.preventDefault();
-          addTag({ id: parseInt(li.dataset.id), name: li.dataset.name });
+          if (li.dataset.new) {
+            createAndAddTag(li.dataset.name);
+          } else {
+            addTag({ id: parseInt(li.dataset.id), name: li.dataset.name });
+          }
         });
       });
+    }
+
+    function createAndAddTag(name) {
+      var meta = document.querySelector('meta[name="csrf-token"]');
+      var token = meta ? meta.content : '';
+      fetch('/tags', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-Token': token },
+        body: JSON.stringify({ name: name })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (tag) { if (tag.id) addTag(tag); })
+        .catch(function () {});
     }
 
     function hideSuggestions() {
@@ -81,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     input.addEventListener('input', function () {
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(function () { fetchSuggestions(input.value.trim()); }, 200);
+      var q = input.value.trim();
+      debounceTimer = setTimeout(function () { fetchSuggestions(q); }, 200);
     });
 
     input.addEventListener('focus', function () {
@@ -92,7 +121,17 @@ document.addEventListener('DOMContentLoaded', function () {
       if (e.key === 'Enter') {
         e.preventDefault();
         var first = suggestions.querySelector('.tag-suggestion-item');
-        if (first) addTag({ id: parseInt(first.dataset.id), name: first.dataset.name });
+        if (first) {
+          if (first.dataset.new) {
+            createAndAddTag(first.dataset.name);
+          } else {
+            addTag({ id: parseInt(first.dataset.id), name: first.dataset.name });
+          }
+        } else {
+          /* Nicio sugestie — încearcă să creeze direct din ce e scris */
+          var q = input.value.trim().toLowerCase().replace(/^#/, '').replace(/[^a-z0-9_]/g, '');
+          if (q) createAndAddTag(q);
+        }
       }
       if (e.key === 'Escape') hideSuggestions();
     });
@@ -120,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Preîncarcă tagurile active din URL */
     new URLSearchParams(window.location.search).getAll('tag_ids[]').forEach(function (id) {
       var pill = activeTags && activeTags.querySelector('[data-id="' + id + '"]');
-      if (pill) active.push({ id: parseInt(id), name: pill.querySelector('.feed-active-tag-name').textContent });
+      if (pill) active.push({ id: parseInt(id), name: pill.querySelector('.feed-active-tag-name').textContent.replace(/^#/, '') });
     });
 
     function fetchSuggestions(q) {
@@ -168,10 +207,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function applyFilter() {
-      var url = new URL(window.location.href);
-      url.searchParams.delete('tag_ids[]');
-      active.forEach(function (t) { url.searchParams.append('tag_ids[]', t.id); });
-      window.location.href = url.toString();
+      var base = window.location.pathname;
+      var parts = active.map(function (t) { return 'tag_ids[]=' + t.id; });
+      /* Preserve the text search query if present */
+      var q = (document.getElementById('postSearchInput') || {}).value;
+      if (q && q.trim()) parts.push('q=' + encodeURIComponent(q.trim()));
+      window.location.href = base + (parts.length ? '?' + parts.join('&') : '');
     }
 
     if (activeTags) {

@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[show edit update destroy toggle_like]
-  before_action :require_login!, only: %i[new create edit update destroy toggle_like my_posts]
+  before_action :require_login!, only: %i[new create edit update destroy toggle_like my_posts liked_posts]
 
   def show
     @post.increment!(:views_count)
@@ -42,6 +42,16 @@ class PostsController < ApplicationController
     @posts = current_user.posts.includes(:tags, :likes, :comments).order(created_at: :desc)
   end
 
+  def liked_posts
+    liked_like = Like.where(user_id: current_user.id)
+    post_ids = liked_like.order(created_at: :desc).pluck(:post_id)
+    @posts = Post.where(id: post_ids)
+                 .includes(:user, :tags, :likes, :comments)
+                 .index_by(&:id)
+                 .values_at(*post_ids)
+                 .compact
+  end
+
   def new
     @post = Post.new
     @all_tags = Tag.order(:name)
@@ -57,12 +67,13 @@ class PostsController < ApplicationController
   end
 
   def edit
-    authorize_post!
+    return unless authorize_post!
+
     @all_tags = Tag.order(:name)
   end
 
   def update
-    authorize_post!
+    return unless authorize_post!
     @post.images.where(id: params[:post][:remove_image_ids]).each(&:purge) if params[:post][:remove_image_ids].present?
     if @post.update(post_params)
       redirect_to feed_path, notice: 'Postare actualizată!'
@@ -72,7 +83,8 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    authorize_post!
+    return unless authorize_post!
+
     @post.destroy
     redirect_to feed_path
   end
@@ -100,6 +112,9 @@ class PostsController < ApplicationController
   end
 
   def authorize_post!
-    redirect_to feed_path, alert: 'Nu ești autorizat.' unless current_user == @post.user || admin_user?
+    return true if current_user == @post.user || admin_user?
+
+    redirect_to feed_path, alert: 'Nu ești autorizat.'
+    false
   end
 end
