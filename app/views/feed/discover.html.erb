@@ -1,10 +1,8 @@
 <div class="neural-page">
 
-  <!-- ── Bara de taguri (sus, orizontală) ──────────────────── -->
   <div class="neural-tag-bar">
     <div class="neural-tag-bar-inner">
 
-      <!-- Text search -->
       <form class="post-search-form" id="postSearchForm" action="<%= discover_path %>" method="get" role="search">
         <% @active_tag_ids.each do |tid| %>
           <input type="hidden" name="tag_ids[]" value="<%= tid %>">
@@ -22,7 +20,6 @@
         </div>
       </form>
 
-      <!-- Tag search -->
       <div class="tag-search-wrap" id="feedTagSearch">
         <div class="tag-search-input-wrap">
           <i class="fa fa-tag tag-search-icon"></i>
@@ -49,6 +46,18 @@
       <% end %>
 
       <div class="neural-tag-bar-actions">
+        <% if @offset > 0 %>
+          <%= link_to discover_path(tag_ids: @active_tag_ids, q: @query.presence, offset: [(@offset - 30), 0].max.nonzero?),
+                      class: 'btn btn-secondary btn-sm' do %>
+            <i class="fa fa-chevron-left"></i> Anterioare
+          <% end %>
+        <% end %>
+        <% if @has_more %>
+          <%= link_to discover_path(tag_ids: @active_tag_ids, q: @query.presence, offset: @offset + 30),
+                      class: 'btn btn-secondary btn-sm' do %>
+            Următoarele <i class="fa fa-chevron-right"></i>
+          <% end %>
+        <% end %>
         <% if current_user %>
           <%= link_to new_post_path, class: 'btn btn-primary btn-sm' do %>
             <i class="fa fa-pencil"></i> Postare nouă
@@ -58,7 +67,6 @@
     </div>
   </div>
 
-  <!-- ── Canvas neural ─────────────────────────────────────── -->
   <div class="neural-feed-wrap">
     <% if @posts.empty? %>
       <div class="feed-empty">
@@ -98,7 +106,6 @@
 
 </div>
 
-<!-- Sliding side panel -->
 <div class="side-panel" id="sidePanel">
   <button class="side-panel-close" id="sidePanelClose" title="Închide">
     <i class="fa fa-times"></i>

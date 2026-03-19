@@ -938,6 +938,15 @@ a.btn.btn-primary:hover {
   margin: 14px 0;
 }
 
+/* ── Discover pagination hint ────────────────────────────── */
+.discover-pagination-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-3);
+  padding: 8px 0 0;
+  letter-spacing: 0.2px;
+}
+
 /* ── My posts page ───────────────────────────────────────── */
 .my-posts-page {
   max-width: 760px;
@@ -1808,3 +1817,60 @@ a.btn.btn-primary:hover {
 .neural-node[data-size="md"] { --node-size: 58px; }
 .neural-node[data-size="sm"] { --node-size: 46px; }
 .neural-node[data-size="sm"] .neural-node-avatar { font-size: 14px; }
+
+/* ── Paginare Kaminari ───────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 32px 0 8px;
+  flex-wrap: wrap;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--r-md);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--t), color var(--t), border-color var(--t);
+  border: 1.5px solid transparent;
+}
+
+.pagination a {
+  background: var(--brand-light);
+  color: var(--brand);
+  border-color: #ddd0cc;
+}
+
+.pagination a:hover {
+  background: #ecddd9;
+  color: var(--brand);
+  border-color: #c8b0aa;
+}
+
+.pagination .current {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+
+.pagination .disabled,
+.pagination span.gap {
+  background: transparent;
+  color: #bbb;
+  border-color: transparent;
+  cursor: default;
+}
+
+.pagination .prev,
+.pagination .next {
+  font-size: 13px;
+}

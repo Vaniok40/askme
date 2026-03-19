@@ -1,4 +1,3 @@
-/* ── Tag input pentru formularul de postare ───────────────── */
 document.addEventListener('DOMContentLoaded', function () {
   var box          = document.getElementById('tagInputBox');
   var pillsWrap    = document.getElementById('tagPills');
@@ -64,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return '<li class="tag-suggestion-item" data-id="' + t.id + '" data-name="' + esc(t.name) + '">#' + esc(t.name) + '</li>';
       });
 
-      /* Dacă textul tastat nu se potrivește exact cu niciun tag existent, oferă opțiunea de a-l crea */
       var normalizedQ = (q || '').trim().toLowerCase().replace(/^#/, '').replace(/[^a-z0-9_]/g, '');
       var exactMatch = normalizedQ && tags.find(function (t) { return t.name === normalizedQ; });
       var alreadySelected = normalizedQ && selected.find(function (s) { return s.name === normalizedQ; });
@@ -128,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
             addTag({ id: parseInt(first.dataset.id), name: first.dataset.name });
           }
         } else {
-          /* Nicio sugestie — încearcă să creeze direct din ce e scris */
           var q = input.value.trim().toLowerCase().replace(/^#/, '').replace(/[^a-z0-9_]/g, '');
           if (q) createAndAddTag(q);
         }
@@ -145,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
     renderPills();
   }
 
-  /* ── Tag search în feed ─────────────────────────────────── */
   var searchInput = document.getElementById('tagSearchInput');
   var feedSuggestions = document.getElementById('tagSuggestions');
   var activeTags  = document.getElementById('feedActiveTags');
@@ -156,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var active = [];
     var debounceTimer;
 
-    /* Preîncarcă tagurile active din URL */
     new URLSearchParams(window.location.search).getAll('tag_ids[]').forEach(function (id) {
       var pill = activeTags && activeTags.querySelector('[data-id="' + id + '"]');
       if (pill) active.push({ id: parseInt(id), name: pill.querySelector('.feed-active-tag-name').textContent.replace(/^#/, '') });
@@ -209,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function applyFilter() {
       var base = window.location.pathname;
       var parts = active.map(function (t) { return 'tag_ids[]=' + t.id; });
-      /* Preserve the text search query if present */
       var q = (document.getElementById('postSearchInput') || {}).value;
       if (q && q.trim()) parts.push('q=' + encodeURIComponent(q.trim()));
       window.location.href = base + (parts.length ? '?' + parts.join('&') : '');
@@ -247,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-/* ── Image upload preview ─────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
   var input   = document.getElementById('imageInput');
   var preview = document.getElementById('imagePreviewList');

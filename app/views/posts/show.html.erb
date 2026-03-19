@@ -112,7 +112,6 @@
   (function () {
     var csrf = document.querySelector('meta[name="csrf-token"]').content;
 
-    // ── Comentarii ─────────────────────────────────────────
     var form = document.getElementById('postShowCommentForm');
     if (form) {
       form.addEventListener('submit', function (e) {
@@ -152,7 +151,6 @@
       });
     }
 
-    // ── Like ────────────────────────────────────────────────
     var likeBtn = document.getElementById('postShowLikeBtn');
     if (likeBtn) {
       likeBtn.addEventListener('click', function () {
@@ -170,7 +168,6 @@
       });
     }
 
-    // ── Forward ─────────────────────────────────────────────
     var forwardBtn = document.getElementById('postShowForwardBtn');
     if (forwardBtn && window.openForwardModal) {
       forwardBtn.addEventListener('click', function () {

@@ -2,14 +2,14 @@
   <div class="my-posts-header">
     <div>
       <h2 class="my-posts-title"><i class="fa fa-newspaper-o"></i> Postările mele</h2>
-      <p class="my-posts-subtitle"><%= @posts.size %> <%= @posts.size == 1 ? 'postare' : 'postări' %> publicate</p>
+      <p class="my-posts-subtitle"><%= @posts.total_count %> <%= @posts.total_count == 1 ? 'postare' : 'postări' %> publicate</p>
     </div>
     <%= link_to new_post_path, class: 'btn btn-primary' do %>
       <i class="fa fa-pencil"></i> Postare nouă
     <% end %>
   </div>
 
-  <% if @posts.empty? %>
+  <% if @posts.total_count == 0 %>
     <div class="my-posts-empty">
       <i class="fa fa-newspaper-o"></i>
       <p>Nu ai nicio postare încă.</p>
@@ -48,10 +48,10 @@
         </div>
       <% end %>
     </div>
+    <%= paginate @posts %>
   <% end %>
 </div>
 
-<!-- Side panel pentru vizualizare postare -->
 <div class="side-panel" id="sidePanel">
   <button class="side-panel-close" id="sidePanelClose" title="Închide"><i class="fa fa-times"></i></button>
   <div class="side-panel-content" id="sidePanelContent">

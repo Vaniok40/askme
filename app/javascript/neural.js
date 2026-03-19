@@ -1,4 +1,3 @@
-/* ── Neural feed — noduri floating cu conexiuni SVG ─────── */
 document.addEventListener('DOMContentLoaded', function () {
   var canvas = document.getElementById('neuralCanvas');
   var svg    = document.getElementById('neuralSvg');
@@ -8,26 +7,23 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!nodes.length) return;
 
   var W, H;
-  var positions  = []; // { x, y, vx, vy, size }
+  var positions  = [];
   var lines      = [];
   var raf;
-  var MAX_DIST   = 260; // distanța maximă pentru conexiune
-  var SIZES      = ['sm', 'md', 'md', 'lg', 'md', 'sm']; // ciclu
+  var MAX_DIST   = 260;
+  var SIZES      = ['sm', 'md', 'md', 'lg', 'md', 'sm'];
   var NODE_SIZES = { sm: 46, md: 58, lg: 70 };
   var PADDING    = 80;
 
-  /* ── 1. Setare dimensiuni noduri ─────────────────────── */
   nodes.forEach(function (node, i) {
     var sizeKey = SIZES[i % SIZES.length];
     node.setAttribute('data-size', sizeKey);
     node.style.setProperty('--node-size', NODE_SIZES[sizeKey] + 'px');
   });
 
-  /* ── 2. Calculare layout inițial ─────────────────────── */
   function layout() {
     W = canvas.offsetWidth;
 
-    /* Distribuie nodurile în grid cu offset aleator */
     var cols  = Math.max(3, Math.round(Math.sqrt(nodes.length * 1.6)));
     var rows  = Math.ceil(nodes.length / cols);
     var cellW = (W - PADDING * 2) / cols;
@@ -45,14 +41,13 @@ document.addEventListener('DOMContentLoaded', function () {
       var x = PADDING + col * cellW + cellW / 2 + randBetween(-cellW * 0.25, cellW * 0.25);
       var y = PADDING + row * cellH + cellH / 2 + randBetween(-cellH * 0.2, cellH * 0.2);
 
-      /* clampare */
       x = Math.max(r + 4, Math.min(W - r - 4, x));
       y = Math.max(r + 4, Math.min(H - r - 4, y));
 
       positions[i] = {
         x:  x,
         y:  y,
-        ox: x, // origine — centrul zonei de floating
+        ox: x,
         oy: y,
         vx: randBetween(-0.08, 0.08),
         vy: randBetween(-0.08, 0.08),
@@ -61,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       applyPos(node, positions[i]);
 
-      /* tooltip sus/jos în funcție de poziție */
       if (y < 120) {
         node.classList.add('tooltip-below');
       } else {
@@ -77,12 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
     node.style.top  = (p.y - p.r) + 'px';
   }
 
-  /* ── 3. Construiesc liniile SVG ──────────────────────── */
   function buildLines() {
     svg.innerHTML = '';
     lines = [];
 
-    /* Fiecare nod se conectează cu 2-3 vecini mai apropiați */
     nodes.forEach(function (_, i) {
       var distances = [];
       nodes.forEach(function (_, j) {
@@ -96,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var connect = Math.min(3, distances.length);
       for (var k = 0; k < connect; k++) {
         var j = distances[k].j;
-        /* evită duplicate */
         if (lines.find(function (l) { return (l.i === i && l.j === j) || (l.i === j && l.j === i); })) continue;
         if (distances[k].d > MAX_DIST) continue;
         var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -124,15 +115,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── 4. Animație floating ────────────────────────────── */
   function animate() {
     nodes.forEach(function (node, i) {
       var p = positions[i];
       p.x += p.vx;
       p.y += p.vy;
 
-      /* Forță de atracție spre origine (spring) */
-      var ORBIT = 40; // raza maximă față de origine
+      var ORBIT = 40;
       var dx0 = p.x - p.ox;
       var dy0 = p.y - p.oy;
       var dist0 = Math.sqrt(dx0 * dx0 + dy0 * dy0);
@@ -142,18 +131,15 @@ document.addEventListener('DOMContentLoaded', function () {
         p.vy -= (dy0 / dist0) * pull;
       }
 
-      /* Drift ușor aleator */
       p.vx += randBetween(-0.001, 0.001);
       p.vy += randBetween(-0.001, 0.001);
 
-      /* Limitare viteză */
       var speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
       if (speed > 0.05) { p.vx *= 0.05 / speed; p.vy *= 0.05 / speed; }
       if (speed < 0.003) { p.vx += randBetween(-0.003, 0.003); p.vy += randBetween(-0.003, 0.003); }
 
       applyPos(node, p);
 
-      /* Tooltip sus/jos */
       if (p.y < 120) {
         node.classList.add('tooltip-below');
       } else {
@@ -165,32 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
     raf = requestAnimationFrame(animate);
   }
 
-  /* ── 5. Click pe nod → panel (preluat de delegarea din feed.js) ── */
-  /* Nodurile au clasa .neural-node și data-post-id, feed.js le prinde automat */
-
-  /* ── 6. Highlight conexiuni la hover ─────────────────── */
-  nodes.forEach(function (node, i) {
-    node.addEventListener('mouseenter', function () {
-      lines.forEach(function (l) {
-        if (l.i === i || l.j === i) {
-          l.el.style.stroke  = '#402E2A';
-          l.el.style.opacity = '0.7';
-          l.el.style.strokeWidth = '2';
-        }
-      });
-    });
-    node.addEventListener('mouseleave', function () {
-      lines.forEach(function (l) {
-        if (l.i === i || l.j === i) {
-          l.el.style.stroke  = '';
-          l.el.style.opacity = '';
-          l.el.style.strokeWidth = '';
-        }
-      });
-    });
-  });
-
-  /* ── 7. Resize ───────────────────────────────────────── */
   var resizeTimer;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
@@ -201,11 +161,116 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 200);
   });
 
-  /* ── Start ───────────────────────────────────────────── */
   layout();
   raf = requestAnimationFrame(animate);
 
-  /* ── Util ────────────────────────────────────────────── */
+  function currentPostIds() {
+    return nodes.map(function (n) { return n.dataset.postId; }).join(',');
+  }
+
+  function buildNodeHtml(post) {
+    var tagsHtml = post.tags.length
+      ? '<span class="neural-tooltip-tags">' + post.tags.map(function (t) { return '#' + t; }).join(' ') + '</span>'
+      : '';
+    return '<div class="neural-node" data-post-id="' + post.id + '" style="--node-color:' + post.user.color + '">' +
+      '<div class="neural-node-inner">' +
+      '<div class="neural-node-avatar" style="background:' + post.user.color + '">' +
+      post.user.name[0].toUpperCase() +
+      '</div></div>' +
+      '<div class="neural-tooltip">' +
+      '<div class="neural-tooltip-title">' + escHtml(post.title) + '</div>' +
+      '<div class="neural-tooltip-body">' + escHtml(post.body) + '</div>' +
+      '<div class="neural-tooltip-meta">' +
+      '<span><i class="fa fa-heart-o"></i> ' + post.likes_count + '</span>' +
+      '<span><i class="fa fa-comment-o"></i> ' + post.comments_count + '</span>' +
+      tagsHtml +
+      '</div></div></div>';
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function rebuildCanvas(freshPosts) {
+    cancelAnimationFrame(raf);
+
+    canvas.style.transition = 'opacity 0.4s';
+    canvas.style.opacity = '0';
+
+    setTimeout(function () {
+      var existingSvg = canvas.querySelector('.neural-svg');
+      canvas.innerHTML = '';
+      canvas.appendChild(existingSvg);
+      existingSvg.innerHTML = '';
+
+      freshPosts.forEach(function (post) {
+        var tmp = document.createElement('div');
+        tmp.innerHTML = buildNodeHtml(post);
+        canvas.appendChild(tmp.firstChild);
+      });
+
+      nodes = Array.from(canvas.querySelectorAll('.neural-node'));
+      positions = [];
+      lines = [];
+
+      nodes.forEach(function (node, i) {
+        var sizeKey = SIZES[i % SIZES.length];
+        node.setAttribute('data-size', sizeKey);
+        node.style.setProperty('--node-size', NODE_SIZES[sizeKey] + 'px');
+      });
+
+      attachHoverHighlight();
+
+      layout();
+      raf = requestAnimationFrame(animate);
+
+      canvas.style.opacity = '1';
+    }, 420);
+  }
+
+  function attachHoverHighlight() {
+    nodes.forEach(function (node, i) {
+      node.addEventListener('mouseenter', function () {
+        lines.forEach(function (l) {
+          if (l.i === i || l.j === i) {
+            l.el.style.stroke = '#402E2A';
+            l.el.style.opacity = '0.7';
+            l.el.style.strokeWidth = '2';
+          }
+        });
+      });
+      node.addEventListener('mouseleave', function () {
+        lines.forEach(function (l) {
+          if (l.i === i || l.j === i) {
+            l.el.style.stroke = '';
+            l.el.style.opacity = '';
+            l.el.style.strokeWidth = '';
+          }
+        });
+      });
+    });
+  }
+
+  function pollUrl() {
+    var sp = new URLSearchParams(window.location.search);
+    sp.set('format', 'json');
+    return window.location.pathname + '?' + sp.toString();
+  }
+
+  setInterval(function () {
+    fetch(pollUrl(), { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var freshIds = data.posts.map(function (p) { return String(p.id); }).join(',');
+        if (freshIds !== currentPostIds()) {
+          rebuildCanvas(data.posts);
+        }
+      })
+      .catch(function () {});
+  }, 15000);
+
+  attachHoverHighlight();
+
   function randBetween(min, max) {
     return min + Math.random() * (max - min);
   }

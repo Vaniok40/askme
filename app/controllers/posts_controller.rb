@@ -39,17 +39,20 @@ class PostsController < ApplicationController
   end
 
   def my_posts
-    @posts = current_user.posts.includes(:tags, :likes, :comments).order(created_at: :desc)
+    @posts = current_user.posts.includes(:tags, :likes, :comments).order(created_at: :desc).page(params[:page]).per(15)
   end
 
   def liked_posts
-    liked_like = Like.where(user_id: current_user.id)
-    post_ids = liked_like.order(created_at: :desc).pluck(:post_id)
-    @posts = Post.where(id: post_ids)
-                 .includes(:user, :tags, :likes, :comments)
-                 .index_by(&:id)
-                 .values_at(*post_ids)
-                 .compact
+    liked_post_ids = Like.where(user_id: current_user.id).order(created_at: :desc).pluck(:post_id)
+    if liked_post_ids.empty?
+      @posts = Post.none.page(params[:page]).per(15)
+    else
+      order_sql = "CASE posts.id #{liked_post_ids.each_with_index.map { |id, i| "WHEN #{id} THEN #{i}" }.join(' ')} END"
+      @posts = Post.where(id: liked_post_ids)
+                   .includes(:user, :tags, :likes, :comments)
+                   .order(Arel.sql(order_sql))
+                   .page(params[:page]).per(15)
+    end
   end
 
   def new

@@ -1,9 +1,7 @@
 <div class="feed-page">
 
-  <!-- Tag filter bar -->
   <div class="feed-filter-bar">
     <div class="feed-filter-bar-inner">
-      <!-- Text search -->
       <form class="post-search-form" id="postSearchForm" action="<%= feed_path %>" method="get" role="search">
         <% @active_tag_ids.each do |tid| %>
           <input type="hidden" name="tag_ids[]" value="<%= tid %>">
@@ -21,7 +19,6 @@
         </div>
       </form>
 
-      <!-- Tag search -->
       <div class="tag-search-wrap" id="feedTagSearch">
         <div class="tag-search-input-wrap">
           <i class="fa fa-tag tag-search-icon"></i>
@@ -47,7 +44,6 @@
     </div>
   </div>
 
-  <!-- Feed header + posts -->
   <div class="feed-page-content">
     <div class="feed-page-header">
       <h2 class="feed-title">
@@ -64,7 +60,7 @@
       <% end %>
     </div>
 
-    <% if @posts.empty? %>
+    <% if @posts.total_count == 0 %>
       <div class="feed-empty">
         <i class="fa fa-users"></i>
         <% if current_user && current_user.following.none? %>
@@ -82,12 +78,12 @@
           <%= render 'posts/post_card', post: post %>
         <% end %>
       </div>
+      <%= paginate @posts %>
     <% end %>
   </div>
 
 </div>
 
-<!-- Sliding side panel -->
 <div class="side-panel" id="sidePanel">
   <button class="side-panel-close" id="sidePanelClose" title="Închide">
     <i class="fa fa-times"></i>

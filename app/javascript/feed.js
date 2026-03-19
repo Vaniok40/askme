@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
         commentForm +
       '</div>';
 
-    // Like toggle
     var likeBtn = document.getElementById('panelLikeBtn');
     if (likeBtn) {
       likeBtn.addEventListener('click', function () {
@@ -138,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // Inline comment submit
     var commentForm2 = document.getElementById('panelCommentForm');
     if (commentForm2) {
       commentForm2.addEventListener('submit', function (e) {
@@ -183,10 +181,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Expune openPanel global pentru neural.js
   window.openPostPanel = openPanel;
 
-  // ── Post text search (debounced) ──────────────────────────
   var postSearchInput = document.getElementById('postSearchInput');
   var postSearchClear = document.getElementById('postSearchClear');
   var postSearchForm  = document.getElementById('postSearchForm');
@@ -214,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Open panel on post card click (feed + my-posts + neural nodes)
   document.addEventListener('click', function (e) {
     if (e.target.closest('a, button, form')) return;
     var card = e.target.closest('.post-card, .my-post-card-body, .neural-node');

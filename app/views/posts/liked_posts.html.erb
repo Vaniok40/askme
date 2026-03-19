@@ -2,11 +2,11 @@
   <div class="my-posts-header">
     <div>
       <h2 class="my-posts-title"><i class="fa fa-heart"></i> Postări apreciate</h2>
-      <p class="my-posts-subtitle"><%= @posts.size %> <%= @posts.size == 1 ? 'postare' : 'postări' %> apreciate</p>
+      <p class="my-posts-subtitle"><%= @posts.total_count %> <%= @posts.total_count == 1 ? 'postare' : 'postări' %> apreciate</p>
     </div>
   </div>
 
-  <% if @posts.empty? %>
+  <% if @posts.total_count == 0 %>
     <div class="my-posts-empty">
       <i class="fa fa-heart-o"></i>
       <p>Nu ai apreciat nicio postare încă.</p>
@@ -41,10 +41,10 @@
         </div>
       <% end %>
     </div>
+    <%= paginate @posts %>
   <% end %>
 </div>
 
-<!-- Side panel -->
 <div class="side-panel" id="sidePanel">
   <button class="side-panel-close" id="sidePanelClose" title="Închide"><i class="fa fa-times"></i></button>
   <div class="side-panel-content" id="sidePanelContent">

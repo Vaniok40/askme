@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 ruby '3.2.2'
 
 gem 'jquery-rails'
+gem 'kaminari'
 gem 'psych', '< 4'
 gem 'puma', '~> 6.4', '>= 6.4.2'
 gem 'rails', '~> 6.0.3.2'
